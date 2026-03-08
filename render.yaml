@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: aura-frontend
+    runtime: node
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+
+  - type: web
+    name: aura-backend-api
+    runtime: node
+    rootDir: backend/api
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: PORT
+        value: 8080
+      - key: CORS_ORIGIN
+        sync: false
+      - key: ALEO_NETWORK
+        value: testnet
+      - key: ALEO_RPC_URL
+        value: https://api.explorer.provable.com/v1
+      - key: PROGRAM_PROFILE_REGISTRY
+        value: profile_registry.aleo
+      - key: PROGRAM_DATA_MARKET
+        value: data_market.aleo
+      - key: PROGRAM_ACCESS_TICKETING
+        value: access_ticketing.aleo
+      - key: PROGRAM_INFERENCE_SETTLEMENT
+        value: inference_settlement.aleo
+      - key: PROGRAM_PAYMENT_ROUTER
+        value: payment_router.aleo
