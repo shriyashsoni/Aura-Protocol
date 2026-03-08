@@ -3,11 +3,11 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "build": "npm --prefix frontend run build",
-    "start": "npm --prefix frontend run start",
-    "render:build:frontend": "npm --prefix frontend run build",
+    "build": "npm --prefix frontend install --legacy-peer-deps && npm --prefix frontend run build",
+    "start": "npm --prefix frontend install --legacy-peer-deps && npm --prefix frontend run start",
+    "render:build:frontend": "npm --prefix frontend install --legacy-peer-deps && npm --prefix frontend run build",
     "render:start:frontend": "npm --prefix frontend run start",
-    "render:build:backend": "npm --prefix backend/api run build",
+    "render:build:backend": "npm --prefix backend/api install && npm --prefix backend/api run build",
     "render:start:backend": "npm --prefix backend/api run start"
   },
   "postinstall": "npm --prefix frontend install --legacy-peer-deps"
