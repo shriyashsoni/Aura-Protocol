@@ -1,0 +1,6 @@
+{
+  "program": "payment_router.aleo",
+  "version": "0.1.0",
+  "description": "Aleo credits payment intent routing",
+  "license": "MIT"
+}

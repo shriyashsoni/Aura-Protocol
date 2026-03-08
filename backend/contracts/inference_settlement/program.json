@@ -1,0 +1,6 @@
+{
+  "program": "inference_settlement.aleo",
+  "version": "0.1.0",
+  "description": "Private inference settlement receipts",
+  "license": "MIT"
+}

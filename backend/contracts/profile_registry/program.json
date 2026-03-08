@@ -1,0 +1,6 @@
+{
+  "program": "profile_registry.aleo",
+  "version": "0.1.0",
+  "description": "Private demographic profile commitments",
+  "license": "MIT"
+}

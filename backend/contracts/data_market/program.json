@@ -1,0 +1,6 @@
+{
+  "program": "data_market.aleo",
+  "version": "0.1.0",
+  "description": "Confidential dataset listings",
+  "license": "MIT"
+}

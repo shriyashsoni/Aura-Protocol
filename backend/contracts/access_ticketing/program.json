@@ -1,0 +1,6 @@
+{
+  "program": "access_ticketing.aleo",
+  "version": "0.1.0",
+  "description": "Private access ticket issuance",
+  "license": "MIT"
+}
