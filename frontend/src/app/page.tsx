@@ -1,211 +1,135 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Brain, Shield, Database, Ticket, Coins, Github, Twitter, MessageCircle, ChevronRight, Terminal } from "lucide-react";
-
-const fadeIn = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-};
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-};
+import { Brain, Shield, Coins, Ticket, FileCode2, Database } from 'lucide-react';
+import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
+import { WalletMultiButton } from "@demox-labs/aleo-wallet-adapter-reactui";
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import Link from 'next/link';
 
 export default function Home() {
-  return (
-    <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans overflow-hidden">
-      {/* Subtle Grid Background */}
-      <div 
-        className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none"
-        style={{ backgroundImage: "linear-gradient(rgba(255, 255, 255, 1) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 1) 1px, transparent 1px)", backgroundSize: "40px 40px" }}
-      />
+  const { publicKey } = useWallet();
+  const router = useRouter();
 
-      <header className="flex justify-between items-center px-8 py-6 border-b border-white/10 sticky top-0 bg-black/80 backdrop-blur-md z-50">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 border border-white flex items-center justify-center rotate-45">
-            <Brain className="w-4 h-4 -rotate-45" />
-          </div>
-          <span className="font-bold text-xl tracking-widest uppercase">Aura Protocol</span>
+  // Redirect to dashboard immediately if wallet is connected
+  useEffect(() => {
+    if (publicKey) {
+      router.push("/dashboard/identity");
+    }
+  }, [publicKey, router]);
+
+  return (
+    <div className='min-h-screen bg-black text-white selection:bg-purple-900 selection:text-white'>
+      <div className='absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(128,90,213,0.15),transparent_50%)] pointer-events-none' />
+
+      <header className='flex justify-between items-center px-8 py-6 border-b border-gray-900 sticky top-0 bg-black/80 backdrop-blur z-50'>
+        <div className='flex items-center space-x-2'>
+          <Brain className='w-8 h-8 text-purple-500' />
+          <span className='font-bold text-xl tracking-tighter'>AURA AI</span>
         </div>
-        <nav className="hidden md:flex space-x-8 text-sm text-neutral-400 tracking-wide">
-          <a href="#features" className="hover:text-white transition-colors">Features</a>
-          <a href="#ecosystem" className="hover:text-white transition-colors">Ecosystem</a>
-          <a href="#" className="hover:text-white transition-colors">Docs</a>
+        <nav className='hidden md:flex space-x-6 text-sm text-gray-400'>
+          <a href='#features' className='hover:text-white transition'>Features</a>
+          <a href='#ecosystem' className='hover:text-white transition'>Ecosystem</a>
+          <a href='#' className='hover:text-white transition'>Docs</a>
         </nav>
-        <button className="border border-white/20 bg-white/5 hover:bg-white hover:text-black text-white px-6 py-2 text-sm font-medium transition-all duration-300">
-          Connect Wallet
-        </button>
+        
+        {/* Replace basic button with WalletMultiButton for direct connection */}
+        <div className="[&>.wallet-adapter-dropdown]:w-full [&>.wallet-adapter-button]:bg-white [&>.wallet-adapter-button]:text-black [&>.wallet-adapter-button]:font-medium [&>.wallet-adapter-button]:px-5 [&>.wallet-adapter-button]:py-2 [&>.wallet-adapter-button]:rounded-full [&>.wallet-adapter-button]:h-auto [&>.wallet-adapter-button:hover]:bg-gray-200 [&>.wallet-adapter-button]:transition">
+            <WalletMultiButton />
+        </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 pt-32 pb-24 relative z-10">
+      <main className='max-w-6xl mx-auto px-4 pt-32 pb-24 relative z-10'>
         {/* Hero Section */}
-        <section className="min-h-[70vh] flex flex-col items-center justify-center text-center space-y-10 mb-32 relative">
-          <motion.div 
-            initial="hidden" animate="visible" variants={staggerContainer}
-            className="max-w-4xl flex flex-col items-center"
-          >
-            <motion.div variants={fadeIn} className="inline-flex items-center space-x-2 border border-white/10 rounded-full px-4 py-1.5 text-xs tracking-widest uppercase mb-8 bg-white/5">
-              <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>
-              <span className="text-neutral-300">v1.0 Live on Aleo Testnet</span>
-            </motion.div>
-            
-            <motion.h1 variants={fadeIn} className="text-6xl md:text-8xl font-bold tracking-tighter leading-[1.1] mb-6">
-              Build the Future of <br />
-              <span className="text-neutral-500">Web3 Infrastructure.</span>
-            </motion.h1>
-            
-            <motion.p variants={fadeIn} className="text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto leading-relaxed mb-10 font-light">
-              A high-end, zero-knowledge execution environment. Seamlessly orchestrate private datasets and compute verification entirely on-chain.
-            </motion.p>
-            
-            <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6 w-full sm:w-auto">
-              <button className="bg-white text-black px-8 py-4 font-semibold hover:bg-neutral-200 transition-all w-full sm:w-auto flex items-center justify-center space-x-2 rounded-none">
-                <span>Launch App</span>
-                <ChevronRight className="w-4 h-4" />
-              </button>
-              <button className="bg-black border border-white/20 text-white hover:bg-white/10 px-8 py-4 font-semibold transition-all w-full sm:w-auto flex items-center justify-center space-x-2 rounded-none">
-                <Github className="w-4 h-4" />
-                <span>View GitHub</span>
-              </button>
-            </motion.div>
-          </motion.div>
-
-          {/* Animated Abstract Element */}
-          <motion.div 
-            animate={{ rotate: 360 }} 
-            transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-            className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-white/[0.02] rounded-full -z-10 flex items-center justify-center"
-          >
-            <div className="w-[600px] h-[600px] border border-white/[0.03] rounded-full flex items-center justify-center border-dashed">
-              <div className="w-[400px] h-[400px] border border-white/[0.04] rounded-full" />
-            </div>
-          </motion.div>
+        <section className='text-center space-y-8 mb-40'>
+          <div className='inline-flex items-center space-x-2 bg-gray-900/50 border border-gray-800 rounded-full px-4 py-1.5 text-sm mb-6'>
+            <span className='w-2 h-2 rounded-full bg-green-500 animate-pulse'></span>
+            <span className='text-gray-300'>Live on Aleo Testnet</span>
+          </div>
+          <h1 className='text-5xl md:text-7xl font-extrabold tracking-tight max-w-4xl mx-auto leading-tight'>
+            Confidential Compute for <br/>
+            <span className='text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-600'>Next-Gen AI Models</span>
+          </h1>
+          <p className='text-gray-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed'>
+            A zero-knowledge marketplace for private data sets, inference requests, and decentralized compute validation. Build the uncompromised AI future.
+          </p>
+          <div className='flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 pt-8'>
+            <Link href="/dashboard/identity" className='bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 rounded-full font-semibold transition w-full sm:w-auto text-lg flex items-center justify-center space-x-2'>
+              <span>Launch App</span>
+              <Brain className='w-5 h-5' />
+            </Link>
+            <button className='bg-gray-900 border border-gray-800 hover:bg-gray-800 text-white px-8 py-4 rounded-full font-semibold transition w-full sm:w-auto text-lg flex items-center justify-center space-x-2'>
+              <FileCode2 className='w-5 h-5' />
+              <span>Read Documentation</span>
+            </button>
+          </div>
         </section>
 
-        {/* Features Section */}
-        <motion.section 
-          initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer}
-          id="features" className="mb-40 pt-16"
-        >
-          <motion.div variants={fadeIn} className="flex flex-col items-center text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Core Architecture</h2>
-            <div className="h-[1px] w-24 bg-white/20"></div>
-          </motion.div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { icon: Shield, title: "Profile Registry", desc: "Zero-knowledge identities storing cryptographic demographic commitments." },
-              { icon: Database, title: "Data Market", desc: "List dataset identifiers with absolute privacy and strict access quotas." },
-              { icon: Ticket, title: "Access Ticketing", desc: "Tokenized authorization granting provable read rights to off-chain data." },
-              { icon: Terminal, title: "Inference Settlement", desc: "Cryptographic validation of generative AI tasks and off-chain execution." },
-              { icon: Coins, title: "Payment Escrow", desc: "Trustless routing of Aleo credits across all marketplace participants." }
-            ].map((feature, i) => (
-              <motion.div 
-                key={i} variants={fadeIn}
-                className="p-8 border border-white/10 bg-black hover:bg-neutral-900/50 hover:border-white/40 transition-all duration-300 group cursor-default"
-              >
-                <feature.icon className="w-8 h-8 text-neutral-400 group-hover:text-white mb-6 transition-colors" strokeWidth={1.5} />
-                <h3 className="text-xl font-semibold mb-3 tracking-tight">{feature.title}</h3>
-                <p className="text-neutral-400 text-sm leading-relaxed font-light">{feature.desc}</p>
-              </motion.div>
-            ))}
+        {/* Modular Protocol Architecture */}
+        <section id='features' className='mb-40 pt-16'>
+          <h2 className='text-3xl font-bold mb-12 text-center'>Powered by 5 ZK Smart Contracts</h2>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            <div className='p-6 rounded-2xl bg-gray-900/40 border border-gray-800 hover:border-purple-500/50 transition group'>
+              <Shield className='w-10 h-10 text-emerald-400 mb-4 group-hover:scale-110 transition-transform' />
+              <h3 className='text-xl font-bold mb-2'>Profile Registry</h3>
+              <p className='text-gray-400 leading-relaxed text-sm'>ZK identities storing demographic and role commitments on-chain without revealing actual values.</p>
+            </div>
+            <div className='p-6 rounded-2xl bg-gray-900/40 border border-gray-800 hover:border-purple-500/50 transition group'>
+              <Database className='w-10 h-10 text-blue-400 mb-4 group-hover:scale-110 transition-transform' />
+              <h3 className='text-xl font-bold mb-2'>Data Market</h3>
+              <p className='text-gray-400 leading-relaxed text-sm'>List dataset identifiers with base prices and sell quotas while retaining complete privacy.</p>
+            </div>
+            <div className='p-6 rounded-2xl bg-gray-900/40 border border-gray-800 hover:border-purple-500/50 transition group'>
+              <Ticket className='w-10 h-10 text-orange-400 mb-4 group-hover:scale-110 transition-transform' />
+              <h3 className='text-xl font-bold mb-2'>Access Ticketing</h3>
+              <p className='text-gray-400 leading-relaxed text-sm'>Purchase single-use or perpetual dataset access tokens minted via the payment router.</p>
+            </div>
+            <div className='p-6 rounded-2xl bg-gray-900/40 border border-gray-800 hover:border-purple-500/50 transition group'>
+              <Brain className='w-10 h-10 text-purple-400 mb-4 group-hover:scale-110 transition-transform' />
+              <h3 className='text-xl font-bold mb-2'>Inference Settlement</h3>
+              <p className='text-gray-400 leading-relaxed text-sm'>Submit inference requests natively to off-chain models and verify computation hashes cryptographically.</p>
+            </div>
+            <div className='p-6 rounded-2xl bg-gray-900/40 border border-gray-800 hover:border-purple-500/50 transition group lg:col-span-2 xl:col-span-1 border-t-4 border-t-yellow-500'>
+              <Coins className='w-10 h-10 text-yellow-400 mb-4 group-hover:scale-110 transition-transform' />
+              <h3 className='text-xl font-bold mb-2'>Payment Router</h3>
+              <p className='text-gray-400 leading-relaxed text-sm'>Secure escrow bridging data consumers, dataset providers, and node runners natively in Aleo credits.</p>
+            </div>
           </div>
-        </motion.section>
+        </section>
 
         {/* Stats Section */}
-        <motion.section 
-          initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer}
-          className="border-y border-white/10 py-20 mb-40 bg-white/[0.01]"
-        >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center divide-x divide-white/5">
-            {[
-              { value: "20K+", label: "Developers" },
-              { value: "100+", label: "Projects" },
-              { value: "1M+", label: "Transactions" },
-              { value: "100%", label: "Confidentiality" }
-            ].map((stat, i) => (
-              <motion.div key={i} variants={fadeIn} className="flex flex-col items-center">
-                <div className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-3">{stat.value}</div>
-                <div className="text-neutral-500 text-sm uppercase tracking-widest font-mono">{stat.label}</div>
-              </motion.div>
-            ))}
+        <section className='border-t border-b border-gray-900 py-16 mb-40'>
+          <div className='grid grid-cols-2 md:grid-cols-4 gap-8 text-center'>
+            <div>
+              <div className='text-4xl font-black text-white mb-2'>5</div>
+              <div className='text-gray-500 text-sm uppercase tracking-wider'>ZK Contracts</div>
+            </div>
+            <div>
+              <div className='text-4xl font-black text-white mb-2'>&lt;1s</div>
+              <div className='text-gray-500 text-sm uppercase tracking-wider'>Proof Generation</div>
+            </div>
+            <div>
+              <div className='text-4xl font-black text-white mb-2'>100%</div>
+              <div className='text-gray-500 text-sm uppercase tracking-wider'>Confidentiality</div>
+            </div>
+            <div>
+              <div className='text-4xl font-black text-white mb-2'>Aleo</div>
+              <div className='text-gray-500 text-sm uppercase tracking-wider'>Network</div>
+            </div>
           </div>
-        </motion.section>
-
-        {/* Community Section */}
-        <motion.section 
-          initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer}
-          className="mb-32 text-center max-w-3xl mx-auto"
-        >
-          <motion.h2 variants={fadeIn} className="text-3xl font-bold tracking-tight mb-6">Join the Ecosystem</motion.h2>
-          <motion.p variants={fadeIn} className="text-neutral-400 mb-10 font-light">
-            Collaborate with developers creating the next generation of private, decentralized AI infrastructure.
-          </motion.p>
-          <motion.div variants={fadeIn} className="flex flex-wrap justify-center gap-4">
-            <button className="flex items-center space-x-2 px-6 py-3 border border-white/20 hover:border-white hover:bg-white hover:text-black transition-all">
-              <MessageCircle className="w-4 h-4" />
-              <span className="text-sm font-medium">Discord</span>
-            </button>
-            <button className="flex items-center space-x-2 px-6 py-3 border border-white/20 hover:border-white hover:bg-white hover:text-black transition-all">
-              <Twitter className="w-4 h-4" />
-              <span className="text-sm font-medium">X (Twitter)</span>
-            </button>
-            <button className="flex items-center space-x-2 px-6 py-3 border border-white/20 hover:border-white hover:bg-white hover:text-black transition-all">
-              <Github className="w-4 h-4" />
-              <span className="text-sm font-medium">GitHub</span>
-            </button>
-          </motion.div>
-        </motion.section>
-
+        </section>
       </main>
 
-      <footer className="border-t border-white/10 bg-black pt-16 pb-8">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
-            <div>
-              <div className="flex items-center space-x-2 mb-6">
-                <div className="w-6 h-6 border border-neutral-500 flex items-center justify-center rotate-45">
-                  <Brain className="w-3 h-3 text-neutral-500 -rotate-45" />
-                </div>
-                <span className="font-bold tracking-widest text-sm uppercase text-neutral-300">Aura</span>
-              </div>
-              <p className="text-neutral-500 text-xs leading-relaxed max-w-xs">
-                Pioneering confidential compute for the new machine intelligence era.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-white mb-6 uppercase tracking-wider text-sm">Developers</h4>
-              <ul className="space-y-4 text-xs text-neutral-400">
-                <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Smart Contracts</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">API Reference</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-white mb-6 uppercase tracking-wider text-sm">Ecosystem</h4>
-              <ul className="space-y-4 text-xs text-neutral-400">
-                <li><a href="#" className="hover:text-white transition-colors">Aleo Network</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Node Runners</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Grants</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-white mb-6 uppercase tracking-wider text-sm">Company</h4>
-              <ul className="space-y-4 text-xs text-neutral-400">
-                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Security</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Brand Kit</a></li>
-              </ul>
-            </div>
+      <footer className='border-t border-gray-900 bg-black py-12'>
+        <div className='max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm'>
+          <div className='flex items-center space-x-2 mb-4 md:mb-0'>
+            <Brain className='w-5 h-5 text-gray-700' />
+            <span>c 2026 Aura Confidential AI. Built on Aleo.</span>
           </div>
-          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-neutral-600">
-            <span>© 2026 Aura Protocol. Open Source Software.</span>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              <a href="#" className="hover:text-white transition-colors">Privacy</a>
-              <a href="#" className="hover:text-white transition-colors">Terms</a>
-            </div>
+          <div className='flex space-x-6'>
+            <a href='#' className='hover:text-white transition'>Twitter</a>
+            <a href='#' className='hover:text-white transition'>Discord</a>
+            <a href='#' className='hover:text-white transition'>GitHub</a>
           </div>
         </div>
       </footer>
