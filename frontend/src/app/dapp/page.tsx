@@ -1,3 +1,6 @@
+// This file has been removed as per user request.
+
+// The original content of this file has been deleted.
 "use client";
 
 import { useEffect } from "react";
