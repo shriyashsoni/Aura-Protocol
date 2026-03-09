@@ -34,6 +34,12 @@ export default function DAppPage() {
   useEffect(() => {
     if (!connected) {
       router.push("/");
+    } else {
+      // Redirect to dashboard after connect, only once
+      if (typeof window !== 'undefined' && !sessionStorage.getItem('dashboardRedirected')) {
+        sessionStorage.setItem('dashboardRedirected', 'true');
+        router.push('/dashboard');
+      }
     }
   }, [connected, router]);
 
@@ -69,63 +75,7 @@ export default function DAppPage() {
       </header>
 
       <main className="max-w-[1400px] mx-auto px-6 py-12">
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={staggerContainer}
-          className="space-y-8"
-        >
-          <motion.div variants={fadeIn}>
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">Welcome to Aura</h1>
-            <p className="text-neutral-400 font-light">Your confidential AI marketplace console.</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <motion.div variants={fadeIn} className="lg:col-span-2 border border-white/10 bg-black p-8">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold">Inference Console</h3>
-                <span className="text-xs font-mono text-neutral-500 uppercase">inference_settlement.aleo</span>
-              </div>
-              <div className="border border-white/10 bg-white/[0.02] p-4 h-56 flex flex-col">
-                <div className="font-mono text-xs text-neutral-400 space-y-2 flex-1">
-                  <p>AURA_TERMINAL_v1 initialized...</p>
-                  <p>Awaiting prompt payload and wallet signature.</p>
-                  <p className="text-green-400">~/&gt; Secure compute ready</p>
-                </div>
-                <div className="flex gap-3 mt-4">
-                  <input
-                    className="flex-1 bg-black border border-white/10 px-3 py-2 text-sm outline-none focus:border-white/30 transition-colors"
-                    placeholder="Analyze private dataset intent..."
-                    readOnly
-                  />
-                  <button className="bg-white text-black px-4 py-2 text-sm font-medium inline-flex items-center gap-2 hover:bg-neutral-200 transition-colors">
-                    <Send className="w-4 h-4" /> Run
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div variants={fadeIn} className="border border-white/10 bg-black p-8">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold">Identity State</h3>
-                <Wallet className="w-5 h-5 text-neutral-500" />
-              </div>
-              <div className="space-y-3 text-sm">
-                <div className="border border-white/10 bg-white/[0.02] p-3 flex justify-between">
-                  <span className="text-neutral-400">KYC Commitment</span>
-                  <span className="text-green-400">Valid</span>
-                </div>
-                <div className="border border-white/10 bg-white/[0.02] p-3 flex justify-between">
-                  <span className="text-neutral-400">Proof Access</span>
-                  <span className="text-green-400">Enabled</span>
-                </div>
-                <div className="border border-white/10 bg-white/[0.02] p-3 flex justify-between">
-                  <span className="text-neutral-400">Network</span>
-                  <span className="text-white">Aleo Testnet</span>
-                </div>
-              </div>
-            </motion.div>
-          </div>
+        {/* Dashboard content goes here after redirect */}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <motion.div variants={fadeIn} className="border border-white/10 bg-black p-8">

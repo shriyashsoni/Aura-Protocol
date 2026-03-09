@@ -75,7 +75,14 @@ export default function Home() {
 
   useEffect(() => {
     if (connected) {
-      router.push("/dashboard");
+      if (typeof window !== 'undefined' && !sessionStorage.getItem('dashboardRedirected')) {
+        sessionStorage.setItem('dashboardRedirected', 'true');
+        router.push('/dashboard');
+      }
+    } else {
+      if (typeof window !== 'undefined') {
+        sessionStorage.removeItem('dashboardRedirected');
+      }
     }
   }, [connected, router]);
 
