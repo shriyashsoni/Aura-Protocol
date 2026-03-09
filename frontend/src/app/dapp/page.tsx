@@ -127,8 +127,7 @@ export default function DAppPage() {
               </div>
             ))}
           </motion.div>
-        </motion.div>
-      </main>
+        </main>
     </div>
   );
 }
