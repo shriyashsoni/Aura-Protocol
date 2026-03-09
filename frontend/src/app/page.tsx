@@ -113,6 +113,12 @@ export default function Home() {
           <a href="#docs" className="hover:text-white transition-colors">Whitepaper</a>
         </nav>
         <div className="flex flex-1 justify-end">
+          <a
+            href="/dashboard"
+            className="mr-4 px-6 py-2 bg-white text-black font-semibold rounded hover:bg-neutral-200 transition-colors shadow"
+          >
+            Dashboard
+          </a>
           <div className="[&>.wallet-adapter-dropdown]:w-full [&>.wallet-adapter-button]:bg-white [&>.wallet-adapter-button]:text-black [&>.wallet-adapter-button]:font-medium [&>.wallet-adapter-button]:text-sm [&>.wallet-adapter-button]:rounded-none [&>.wallet-adapter-button]:h-10 [&>.wallet-adapter-button:hover]:bg-neutral-200 [&>.wallet-adapter-button]:transition-colors">
             <WalletMultiButton />
           </div>

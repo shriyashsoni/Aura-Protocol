@@ -49,6 +49,7 @@ export default function DAppPage() {
 
   return (
     <div className="min-h-screen bg-black text-white font-sans">
+      <div className="bg-yellow-900 text-yellow-200 text-center py-2 font-bold">This is the legacy dashboard. Please use the new Dashboard for live features.</div>
       <header className="flex justify-between items-center px-8 py-6 border-b border-white/10 sticky top-0 bg-black/80 backdrop-blur-md z-50">
         <div className="flex items-center space-x-3">
           <a href="/" className="flex items-center space-x-3">

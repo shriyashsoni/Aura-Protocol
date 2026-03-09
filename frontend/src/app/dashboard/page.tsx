@@ -20,9 +20,10 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-black text-white font-sans flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold mb-4">Dashboard</h1>
-      <p className="text-lg text-neutral-400 mb-8">Welcome to your dashboard. Wallet is connected.</p>
-      {/* Add dashboard widgets/components here */}
+      <h1 className="text-4xl font-bold mb-4">Dashboard (Live Data)</h1>
+      <p className="text-lg text-neutral-400 mb-8">Welcome, <span className="font-mono">{publicKey}</span></p>
+      {/* TODO: Add real on-chain data, contract actions, and live updates here */}
+      <div className="mt-8 text-neutral-500">All features will be live and on-chain here.</div>
     </div>
   );
 }
