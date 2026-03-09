@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
 import { commitmentsApi, marketplaceApi, payloadsApi } from "../../lib/api-client";
+import { WalletMultiButton } from "@demox-labs/aleo-wallet-adapter-reactui";
+import "@demox-labs/aleo-wallet-adapter-reactui/styles.css";
 
 export default function DashboardPage() {
   const { connected, publicKey, wallet } = useWallet();
@@ -28,11 +30,7 @@ export default function DashboardPage() {
     }
   }, [wallet]);
 
-  useEffect(() => {
-    if (walletReady && !connected) {
-      router.push("/");
-    }
-  }, [walletReady, connected, router]);
+
 
   useEffect(() => {
     if (connected) {
@@ -57,10 +55,22 @@ export default function DashboardPage() {
     }
   }, [connected]);
 
+
   if (!walletReady) {
     return <div className="min-h-screen flex items-center justify-center text-white">Loading wallet...</div>;
   }
-  if (!connected) return null;
+  if (!connected) {
+    // Show wallet connect prompt on dashboard
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white">
+        <h1 className="text-3xl font-bold mb-4">Connect your wallet to view the dashboard</h1>
+        <div className="mb-8">Please connect your Aleo wallet to access your dashboard and on-chain data.</div>
+        <div className="[&>.wallet-adapter-dropdown]:w-full [&>.wallet-adapter-button]:bg-white [&>.wallet-adapter-button]:text-black [&>.wallet-adapter-button]:font-medium [&>.wallet-adapter-button]:text-xs [&>.wallet-adapter-button]:rounded [&>.wallet-adapter-button]:h-10 [&>.wallet-adapter-button]:px-4 [&>.wallet-adapter-button]:py-2 [&>.wallet-adapter-button:hover]:bg-neutral-200 [&>.wallet-adapter-button]:transition-colors">
+          <WalletMultiButton />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black text-white font-sans flex flex-col items-center py-12">
