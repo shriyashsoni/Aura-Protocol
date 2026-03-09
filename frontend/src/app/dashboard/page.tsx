@@ -1,66 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
-import { commitmentsApi, marketplaceApi, payloadsApi } from "../../lib/api-client";
 import { WalletMultiButton } from "@demox-labs/aleo-wallet-adapter-reactui";
 import "@demox-labs/aleo-wallet-adapter-reactui/styles.css";
 
 export default function DashboardPage() {
-  const { connected, publicKey, wallet } = useWallet();
-  const router = useRouter();
+  const { connected, publicKey } = useWallet();
+  const [activeTab, setActiveTab] = useState("profile");
 
-  // State for all real-time, on-chain data
-  const [profile, setProfile] = useState<any>(null);
-  const [profileLoading, setProfileLoading] = useState(false);
-  const [profileError, setProfileError] = useState("");
+  // Placeholder: Add real data fetching and actions in each section
 
-  const [listings, setListings] = useState<any[]>([]);
-  const [listingsLoading, setListingsLoading] = useState(false);
-  const [listingsError, setListingsError] = useState("");
-
-  // Wallet loading state: true until wallet adapter is initialized
-  const [walletReady, setWalletReady] = useState(false);
-  useEffect(() => {
-    // Wait for wallet adapter to finish initializing
-    // The wallet object is undefined until ready
-    if (wallet !== undefined) {
-      setWalletReady(true);
-    }
-  }, [wallet]);
-
-
-
-  useEffect(() => {
-    if (connected) {
-      setProfileLoading(true);
-      commitmentsApi.getProfile()
-        .then((res) => {
-          if (res.success) setProfile(res.data);
-          else setProfileError(res.error || "Failed to fetch profile");
-        })
-        .catch((e) => setProfileError(e.message || "Unknown error"))
-        .finally(() => setProfileLoading(false));
-
-      setListingsLoading(true);
-      marketplaceApi.getListings()
-        .then((res) => {
-          if (res.success) setListings(res.data || []);
-          else setListingsError(res.error || "Failed to fetch listings");
-        })
-        .catch((e) => setListingsError(e.message || "Unknown error"))
-        .finally(() => setListingsLoading(false));
-      // TODO: Fetch payments, tickets, inference, etc. here
-    }
-  }, [connected]);
-
-
-  if (!walletReady) {
-    return <div className="min-h-screen flex items-center justify-center text-white">Loading wallet...</div>;
-  }
   if (!connected) {
-    // Show wallet connect prompt on dashboard
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white">
         <h1 className="text-3xl font-bold mb-4">Connect your wallet to view the dashboard</h1>
@@ -73,52 +24,58 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans flex flex-col items-center py-12">
-      <h1 className="text-4xl font-bold mb-4">Dashboard</h1>
-      <div className="mb-6 text-lg">Wallet: <span className="font-mono text-green-400">{publicKey}</span></div>
-
-      {/* Profile Section */}
-      <div className="w-full max-w-xl bg-white/5 rounded p-6 mb-8">
-        <h2 className="text-2xl font-semibold mb-2">Profile Commitments</h2>
-        {profileLoading && <div className="text-neutral-400">Loading profile...</div>}
-        {profileError && <div className="text-red-400">{profileError}</div>}
-        {profile && (
-          <pre className="text-xs bg-black/60 p-4 rounded overflow-x-auto border border-white/10">
-            {JSON.stringify(profile, null, 2)}
-          </pre>
+    <div className="min-h-screen flex bg-black text-white font-sans">
+      {/* Sidebar Navigation */}
+      <aside className="w-64 bg-white/5 border-r border-white/10 flex flex-col py-8 px-4 min-h-screen">
+        <div className="mb-10 text-2xl font-bold tracking-widest uppercase text-center">Dashboard</div>
+        <nav className="flex flex-col gap-2">
+          <button className={`text-left px-4 py-2 rounded transition-colors ${activeTab === "profile" ? "bg-white/10 text-green-400" : "hover:bg-white/10"}`} onClick={() => setActiveTab("profile")}>Profile</button>
+          <button className={`text-left px-4 py-2 rounded transition-colors ${activeTab === "marketplace" ? "bg-white/10 text-green-400" : "hover:bg-white/10"}`} onClick={() => setActiveTab("marketplace")}>Marketplace</button>
+          <button className={`text-left px-4 py-2 rounded transition-colors ${activeTab === "tickets" ? "bg-white/10 text-green-400" : "hover:bg-white/10"}`} onClick={() => setActiveTab("tickets")}>Tickets</button>
+          <button className={`text-left px-4 py-2 rounded transition-colors ${activeTab === "payments" ? "bg-white/10 text-green-400" : "hover:bg-white/10"}`} onClick={() => setActiveTab("payments")}>Payments</button>
+          <button className={`text-left px-4 py-2 rounded transition-colors ${activeTab === "inference" ? "bg-white/10 text-green-400" : "hover:bg-white/10"}`} onClick={() => setActiveTab("inference")}>Inference</button>
+        </nav>
+        <div className="mt-auto pt-10 border-t border-white/10">
+          <div className="text-xs text-neutral-400 mb-2">Wallet</div>
+          <div className="font-mono text-green-400 break-all text-xs">{publicKey}</div>
+          <div className="mt-4">
+            <WalletMultiButton />
+          </div>
+        </div>
+      </aside>
+      {/* Main Content */}
+      <main className="flex-1 p-10 overflow-y-auto">
+        {activeTab === "profile" && (
+          <section>
+            <h2 className="text-3xl font-bold mb-6">Profile</h2>
+            <div className="bg-white/5 rounded p-6 mb-8">Profile details and actions go here.</div>
+          </section>
         )}
-        {!profileLoading && !profileError && !profile && (
-          <div className="text-neutral-400">No profile found.</div>
+        {activeTab === "marketplace" && (
+          <section>
+            <h2 className="text-3xl font-bold mb-6">Marketplace</h2>
+            <div className="bg-white/5 rounded p-6 mb-8">Marketplace listings and actions go here.</div>
+          </section>
         )}
-      </div>
-
-      {/* Marketplace Listings Section */}
-      <div className="w-full max-w-2xl bg-white/5 rounded p-6 mb-8">
-        <h2 className="text-2xl font-semibold mb-2">Marketplace Listings</h2>
-        {listingsLoading && <div className="text-neutral-400">Loading listings...</div>}
-        {listingsError && <div className="text-red-400">{listingsError}</div>}
-        {listings.length > 0 ? (
-          <ul className="divide-y divide-white/10">
-            {listings.map((listing) => (
-              <li key={listing.id} className="py-3 flex flex-col md:flex-row md:items-center md:justify-between">
-                <div>
-                  <div className="font-mono text-sm text-green-300">{listing.title}</div>
-                  <div className="text-xs text-neutral-400">{listing.description}</div>
-                  <div className="text-xs text-neutral-500">Type: {listing.dataType} | Seller: {listing.seller}</div>
-                </div>
-                <div className="mt-2 md:mt-0 text-right">
-                  <span className="text-lg font-bold">{listing.price} ALEO</span>
-                  <div className="text-xs text-neutral-500">{listing.available ? "Available" : "Sold"}</div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          !listingsLoading && !listingsError && <div className="text-neutral-400">No listings found.</div>
+        {activeTab === "tickets" && (
+          <section>
+            <h2 className="text-3xl font-bold mb-6">Tickets</h2>
+            <div className="bg-white/5 rounded p-6 mb-8">Ticketing features and actions go here.</div>
+          </section>
         )}
-      </div>
-
-      {/* TODO: Add payments, tickets, inference, and contract actions here, all real and on-chain */}
+        {activeTab === "payments" && (
+          <section>
+            <h2 className="text-3xl font-bold mb-6">Payments</h2>
+            <div className="bg-white/5 rounded p-6 mb-8">Payment features and actions go here.</div>
+          </section>
+        )}
+        {activeTab === "inference" && (
+          <section>
+            <h2 className="text-3xl font-bold mb-6">Inference</h2>
+            <div className="bg-white/5 rounded p-6 mb-8">Inference features and actions go here.</div>
+          </section>
+        )}
+      </main>
     </div>
   );
 }
