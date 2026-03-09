@@ -1,6 +1,5 @@
 "use client";
 
-
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
@@ -9,6 +8,8 @@ import { commitmentsApi, marketplaceApi, payloadsApi } from "../../lib/api-clien
 export default function DashboardPage() {
   const { connected, publicKey } = useWallet();
   const router = useRouter();
+
+  // State for all real-time, on-chain data
   const [profile, setProfile] = useState<any>(null);
   const [profileLoading, setProfileLoading] = useState(false);
   const [profileError, setProfileError] = useState("");
@@ -16,6 +17,8 @@ export default function DashboardPage() {
   const [listings, setListings] = useState<any[]>([]);
   const [listingsLoading, setListingsLoading] = useState(false);
   const [listingsError, setListingsError] = useState("");
+
+  // Add more states for payments, tickets, inference, etc. as needed
 
   useEffect(() => {
     if (!connected) {
@@ -42,6 +45,7 @@ export default function DashboardPage() {
         })
         .catch((e) => setListingsError(e.message || "Unknown error"))
         .finally(() => setListingsLoading(false));
+      // TODO: Fetch payments, tickets, inference, etc. here
     }
   }, [connected]);
 
@@ -49,7 +53,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-black text-white font-sans flex flex-col items-center py-12">
-      <h1 className="text-4xl font-bold mb-4">Dashboard (Live Data)</h1>
+      <h1 className="text-4xl font-bold mb-4">Dashboard</h1>
       <div className="mb-6 text-lg">Wallet: <span className="font-mono text-green-400">{publicKey}</span></div>
 
       {/* Profile Section */}
@@ -93,7 +97,7 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {/* TODO: Add payments, tickets, inference, and contract actions here */}
+      {/* TODO: Add payments, tickets, inference, and contract actions here, all real and on-chain */}
     </div>
   );
 }
