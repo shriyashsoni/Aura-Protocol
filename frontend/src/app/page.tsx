@@ -73,8 +73,6 @@ export default function Home() {
   const { connected } = useWallet();
   const router = useRouter();
 
-  // Remove auto-redirect to dashboard so user can always see the button
-
   return (
     <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans overflow-x-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -140,6 +138,7 @@ export default function Home() {
                     alert('Please connect your wallet to access the dashboard.');
                   }
                 }}
+                type="button"
               >
                 <span>View Dashboard</span>
                 <ChevronRight className="w-4 h-4" />
