@@ -6,9 +6,12 @@
 			"use": "@vercel/next"
 		}
 	],
-	"env": {
-		"NODE_ENV": "production"
-	},
+	"routes": [
+		{
+			"src": "/(.*)",
+			"dest": "frontend/$1"
+		}
+	],
 	"github": {
 		"silent": true
 	}
