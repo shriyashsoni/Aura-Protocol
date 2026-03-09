@@ -75,7 +75,7 @@ export default function Home() {
 
   useEffect(() => {
     if (connected) {
-      router.push("/dapp");
+      router.push("/dashboard");
     }
   }, [connected, router]);
 

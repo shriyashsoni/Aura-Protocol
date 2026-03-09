@@ -51,6 +51,12 @@ export default function DAppPage() {
             </div>
             <span className="font-bold text-xl tracking-widest uppercase">Aura dApp</span>
           </a>
+          <button
+            className="ml-6 px-4 py-2 bg-white text-black rounded hover:bg-neutral-200 transition-colors"
+            onClick={() => router.push('/dashboard')}
+          >
+            Go to Dashboard
+          </button>
         </div>
         <div className="flex items-center gap-4">
           <span className="text-xs font-mono text-neutral-500 hidden md:inline break-all max-w-[200px] truncate">
