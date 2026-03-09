@@ -12,13 +12,13 @@ import {
   Terminal,
   FileText,
   Globe,
-  Wallet,
   Activity,
   Lock,
   Fingerprint,
-  Send,
 } from "lucide-react";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
 import { WalletMultiButton } from "@demox-labs/aleo-wallet-adapter-reactui";
 import "@demox-labs/aleo-wallet-adapter-reactui/styles.css";
@@ -70,7 +70,14 @@ const TickerItem = () => (
 );
 
 export default function Home() {
-  const { publicKey } = useWallet();
+  const { connected } = useWallet();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (connected) {
+      router.push("/dapp");
+    }
+  }, [connected, router]);
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans overflow-x-hidden">
@@ -95,7 +102,6 @@ export default function Home() {
         </div>
         <nav className="hidden md:flex flex-1 justify-center space-x-8 text-sm text-neutral-400 tracking-wide">
           <a href="#features" className="hover:text-white transition-colors">Architecture</a>
-          <a href="#dashboard" className="hover:text-white transition-colors">Dashboard</a>
           <a href="#ecosystem" className="hover:text-white transition-colors">Ecosystem</a>
           <a href="#docs" className="hover:text-white transition-colors">Whitepaper</a>
         </nav>
@@ -129,8 +135,8 @@ export default function Home() {
             </motion.p>
 
             <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
-              <a href="#dashboard" className="bg-white text-black px-8 py-4 font-semibold hover:bg-neutral-200 transition-all w-full sm:w-auto flex items-center justify-center space-x-2 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]">
-                <span>Open Dashboard</span>
+              <a href="#features" className="bg-white text-black px-8 py-4 font-semibold hover:bg-neutral-200 transition-all w-full sm:w-auto flex items-center justify-center space-x-2 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]">
+                <span>Explore Architecture</span>
                 <ChevronRight className="w-4 h-4" />
               </a>
               <button className="bg-transparent border border-white text-white hover:bg-white/10 px-8 py-4 font-semibold transition-all w-full sm:w-auto flex items-center justify-center space-x-2">
@@ -204,103 +210,6 @@ export default function Home() {
                 <p className="text-neutral-400 text-sm leading-relaxed font-light">{feature.desc}</p>
               </motion.div>
             ))}
-          </div>
-        </motion.section>
-
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={staggerContainer}
-          id="dashboard"
-          className="max-w-[1400px] mx-auto px-6 mb-40"
-        >
-          <motion.div variants={fadeIn} className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16">
-            <div>
-              <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Integrated Dashboard</h2>
-              <div className="h-[1px] w-24 bg-white/30"></div>
-            </div>
-            <div className="mt-4 md:mt-0 text-left md:text-right">
-              <p className="text-neutral-400 text-sm md:text-base font-light">No separate dashboard UI. Everything is now in one primary interface.</p>
-              <p className="text-neutral-500 text-xs font-mono mt-2 break-all">{publicKey ? `Wallet: ${publicKey}` : "Wallet: not connected"}</p>
-            </div>
-          </motion.div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-            <motion.div variants={fadeIn} className="lg:col-span-2 border border-white/10 bg-black p-8">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold">Inference Console</h3>
-                <span className="text-xs font-mono text-neutral-500 uppercase">inference_settlement.aleo</span>
-              </div>
-              <div className="border border-white/10 bg-white/[0.02] p-4 h-56 flex flex-col">
-                <div className="font-mono text-xs text-neutral-400 space-y-2 flex-1">
-                  <p>AURA_TERMINAL_v1 initialized...</p>
-                  <p>Awaiting prompt payload and wallet signature.</p>
-                  <p className="text-green-400">~/&gt; Secure compute ready</p>
-                </div>
-                <div className="flex gap-3 mt-4">
-                  <input
-                    className="flex-1 bg-black border border-white/10 px-3 py-2 text-sm outline-none"
-                    placeholder="Analyze private dataset intent..."
-                    readOnly
-                  />
-                  <button className="bg-white text-black px-4 py-2 text-sm font-medium inline-flex items-center gap-2">
-                    <Send className="w-4 h-4" /> Run
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div variants={fadeIn} className="border border-white/10 bg-black p-8">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold">Identity State</h3>
-                <Wallet className="w-5 h-5 text-neutral-500" />
-              </div>
-              <div className="space-y-3 text-sm">
-                <div className="border border-white/10 bg-white/[0.02] p-3 flex justify-between">
-                  <span className="text-neutral-400">KYC Commitment</span>
-                  <span className={publicKey ? "text-green-400" : "text-neutral-500"}>{publicKey ? "Valid" : "Pending"}</span>
-                </div>
-                <div className="border border-white/10 bg-white/[0.02] p-3 flex justify-between">
-                  <span className="text-neutral-400">Proof Access</span>
-                  <span className={publicKey ? "text-green-400" : "text-neutral-500"}>{publicKey ? "Enabled" : "Locked"}</span>
-                </div>
-                <div className="border border-white/10 bg-white/[0.02] p-3 flex justify-between">
-                  <span className="text-neutral-400">Network</span>
-                  <span className="text-white">Aleo Testnet</span>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <motion.div variants={fadeIn} className="border border-white/10 bg-black p-8">
-              <h3 className="text-xl font-semibold mb-5">Data Market Feed</h3>
-              <div className="space-y-3 text-sm">
-                {[1, 2, 3].map((item) => (
-                  <div key={item} className="border border-white/10 bg-white/[0.02] p-3 flex items-center justify-between">
-                    <span className="font-mono">MEDICAL_IMAGING_SET_{item}</span>
-                    <span className="text-neutral-300">{item * 15} ALEO</span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            <motion.div variants={fadeIn} className="border border-white/10 bg-black p-8">
-              <h3 className="text-xl font-semibold mb-5">Escrow Vault</h3>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div className="border border-white/10 bg-white/[0.02] p-4">
-                  <p className="text-neutral-500 mb-2">Locked Value</p>
-                  <p className="text-2xl font-light">12,500</p>
-                  <p className="text-xs text-neutral-500">ALEO</p>
-                </div>
-                <div className="border border-white/10 bg-white/[0.02] p-4">
-                  <p className="text-neutral-500 mb-2">Active Routings</p>
-                  <p className="text-2xl font-light">4</p>
-                  <p className="text-xs text-neutral-500">LIVE</p>
-                </div>
-              </div>
-            </motion.div>
           </div>
         </motion.section>
 
