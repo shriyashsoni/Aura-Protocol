@@ -6,7 +6,7 @@ import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
 import { commitmentsApi, marketplaceApi, payloadsApi } from "../../lib/api-client";
 
 export default function DashboardPage() {
-  const { connected, publicKey } = useWallet();
+  const { connected, publicKey, wallet } = useWallet();
   const router = useRouter();
 
   // State for all real-time, on-chain data
@@ -18,13 +18,21 @@ export default function DashboardPage() {
   const [listingsLoading, setListingsLoading] = useState(false);
   const [listingsError, setListingsError] = useState("");
 
-  // Add more states for payments, tickets, inference, etc. as needed
+  // Wallet loading state: true until wallet adapter is initialized
+  const [walletReady, setWalletReady] = useState(false);
+  useEffect(() => {
+    // Wait for wallet adapter to finish initializing
+    // The wallet object is undefined until ready
+    if (wallet !== undefined) {
+      setWalletReady(true);
+    }
+  }, [wallet]);
 
   useEffect(() => {
-    if (!connected) {
+    if (walletReady && !connected) {
       router.push("/");
     }
-  }, [connected, router]);
+  }, [walletReady, connected, router]);
 
   useEffect(() => {
     if (connected) {
@@ -49,6 +57,9 @@ export default function DashboardPage() {
     }
   }, [connected]);
 
+  if (!walletReady) {
+    return <div className="min-h-screen flex items-center justify-center text-white">Loading wallet...</div>;
+  }
   if (!connected) return null;
 
   return (
