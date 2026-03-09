@@ -73,11 +73,7 @@ export default function Home() {
   const { connected } = useWallet();
   const router = useRouter();
 
-  useEffect(() => {
-    if (connected) {
-      router.replace('/dashboard');
-    }
-  }, [connected, router]);
+  // Remove auto-redirect to dashboard so user can always see the button
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans overflow-x-hidden">
@@ -135,15 +131,19 @@ export default function Home() {
             </motion.p>
 
             <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
-              {connected && (
-                <a
-                  href="/dashboard"
-                  className="bg-white text-black px-8 py-4 font-semibold hover:bg-neutral-200 transition-all w-full sm:w-auto flex items-center justify-center space-x-2 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]"
-                >
-                  <span>View Dashboard</span>
-                  <ChevronRight className="w-4 h-4" />
-                </a>
-              )}
+              <button
+                className="bg-white text-black px-8 py-4 font-semibold hover:bg-neutral-200 transition-all w-full sm:w-auto flex items-center justify-center space-x-2 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]"
+                onClick={() => {
+                  if (connected) {
+                    router.push('/dashboard');
+                  } else {
+                    alert('Please connect your wallet to access the dashboard.');
+                  }
+                }}
+              >
+                <span>View Dashboard</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
               <button className="bg-transparent border border-white text-white hover:bg-white/10 px-8 py-4 font-semibold transition-all w-full sm:w-auto flex items-center justify-center space-x-2">
                 <Github className="w-4 h-4" />
                 <span>View GitHub</span>
