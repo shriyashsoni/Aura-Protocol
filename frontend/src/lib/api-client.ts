@@ -16,6 +16,18 @@ interface RequestOptions extends RequestInit {
   headers?: Record<string, string>;
 }
 
+export interface MarketplaceListing {
+  id: string;
+  title: string;
+  description: string;
+  dataType: string;
+  price: string;
+  seller: string;
+  createdAt: string;
+  expiresAt: string;
+  available: boolean;
+}
+
 /**
  * Generic fetch wrapper for API calls
  */
@@ -80,7 +92,7 @@ export const marketplaceApi = {
     if (filters?.available !== undefined) params.append('available', String(filters.available));
     
     const query = params.toString();
-    return apiCall(`/marketplace/listings${query ? `?${query}` : ''}`);
+    return apiCall<MarketplaceListing[]>(`/marketplace/listings${query ? `?${query}` : ''}`);
   },
 
   createListing: async (listing: {

@@ -1,22 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { api } from '@/lib/api-client';
-
-interface Listing {
-  id: string;
-  title: string;
-  description: string;
-  dataType: string;
-  price: string;
-  seller: string;
-  createdAt: string;
-  expiresAt: string;
-  available: boolean;
-}
+import { api, type MarketplaceListing } from '@/lib/api-client';
 
 export default function DashboardMarketPage() {
-	const [listings, setListings] = useState<Listing[]>([]);
+	const [listings, setListings] = useState<MarketplaceListing[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
@@ -26,7 +14,7 @@ export default function DashboardMarketPage() {
 				setLoading(true);
 				const response = await api.marketplace.getListings({ available: true });
 				if (response.success) {
-					setListings(response.data || []);
+					setListings(response.data ?? []);
 				} else {
 					setError(response.error || 'Failed to load listings');
 				}
