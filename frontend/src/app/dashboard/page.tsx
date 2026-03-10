@@ -193,6 +193,7 @@ function InferenceSettlementForm({ publicKey }: { publicKey: string | null }) {
 // --- Main Dashboard Component ---
 function DashboardPage() {
   const { publicKey, connected } = useWallet();
+
   const [activeTab, setActiveTab] = useState("profile");
   const [profile, setProfile] = useState<any>(null);
   const [profileLoading, setProfileLoading] = useState(false);
@@ -200,34 +201,52 @@ function DashboardPage() {
   const [listings, setListings] = useState<any[]>([]);
   const [listingsLoading, setListingsLoading] = useState(false);
   const [listingsError, setListingsError] = useState("");
+  const [contracts, setContracts] = useState<any>(null);
+  const [contractsLoading, setContractsLoading] = useState(false);
+  const [contractsError, setContractsError] = useState("");
 
-  const fetchListings = async () => {
+  // Fetch smart contract addresses
+  const fetchContracts = async () => {
+    setContractsLoading(true);
+    setContractsError("");
+    try {
+      const res = await (await fetch("/api/v1/programs")).json();
+      setContracts(res);
+    } catch (e: any) {
+      setContractsError(e.message || "Failed to fetch contracts");
+    } finally {
+      setContractsLoading(false);
+    }
+  };
+
+  // Fetch profile and listings
+  const fetchProfileAndListings = async () => {
+    setProfileLoading(true);
+    setProfileError("");
     setListingsLoading(true);
     setListingsError("");
     try {
-      const res = await marketplaceApi.getListings();
-      if (res.success) setListings(res.data || []);
-      else setListingsError(res.error || "Failed to fetch listings");
+      const [profileRes, listingsRes] = await Promise.all([
+        commitmentsApi.getProfile(),
+        marketplaceApi.getListings(),
+      ]);
+      if (profileRes.success) setProfile(profileRes.data);
+      else setProfileError(profileRes.error || "Failed to fetch profile");
+      if (listingsRes.success) setListings(listingsRes.data || []);
+      else setListingsError(listingsRes.error || "Failed to fetch listings");
     } catch (e: any) {
+      setProfileError(e.message || "Unknown error");
       setListingsError(e.message || "Unknown error");
     } finally {
+      setProfileLoading(false);
       setListingsLoading(false);
     }
   };
 
   useEffect(() => {
     if (connected) {
-      setProfileLoading(true);
-      setProfileError("");
-      commitmentsApi.getProfile()
-        .then((res) => {
-          if (res.success) setProfile(res.data);
-          else setProfileError(res.error || "Failed to fetch profile");
-        })
-        .catch((e) => setProfileError(e.message || "Unknown error"))
-        .finally(() => setProfileLoading(false));
-
-      fetchListings();
+      fetchProfileAndListings();
+      fetchContracts();
     }
   }, [connected]);
 
@@ -256,10 +275,53 @@ function DashboardPage() {
           {[
             { id: "profile", label: "Profile", icon: "👤" },
             { id: "marketplace", label: "Marketplace", icon: "🛒" },
+            { id: "contracts", label: "Smart Contracts", icon: "📜" },
+            { id: "aiagents", label: "AI Agents", icon: "🤖" },
+            { id: "profit", label: "Profit", icon: "💰" },
             { id: "tickets", label: "Tickets", icon: "🎫" },
             { id: "payments", label: "Payments", icon: "💳" },
             { id: "inference", label: "Inference", icon: "🧠" }
           ].map(tab => (
+                      {activeTab === "contracts" && (
+                        <section>
+                          <h2 className="text-3xl font-bold mb-6">Smart Contract Addresses</h2>
+                          <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-8">
+                            {contractsLoading && <div className="text-neutral-400">Loading contracts...</div>}
+                            {contractsError && <div className="text-red-400 bg-red-500/10 p-4 rounded">{contractsError}</div>}
+                            {contracts && (
+                              <ul className="space-y-3">
+                                {Object.entries(contracts).map(([key, value]) => (
+                                  <li key={key} className="flex justify-between items-center bg-neutral-800 rounded p-3">
+                                    <span className="font-semibold text-neutral-300">{key}</span>
+                                    <span className="font-mono text-green-400">{value}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                            {!contractsLoading && !contractsError && !contracts && (
+                              <div className="text-neutral-400">No contract data available.</div>
+                            )}
+                          </div>
+                        </section>
+                      )}
+
+                      {activeTab === "aiagents" && (
+                        <section>
+                          <h2 className="text-3xl font-bold mb-6">AI Agents</h2>
+                          <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-8">
+                            <div className="text-neutral-400">AI agent data integration required. Please connect backend to real AI agent registry or service.</div>
+                          </div>
+                        </section>
+                      )}
+
+                      {activeTab === "profit" && (
+                        <section>
+                          <h2 className="text-3xl font-bold mb-6">Project Profit</h2>
+                          <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-8">
+                            <div className="text-neutral-400">Profit data integration required. Please connect backend to real profit/earnings data source.</div>
+                          </div>
+                        </section>
+                      )}
             <button
               key={tab.id}
               className={`text-left px-4 py-3 rounded-lg transition-all text-sm font-medium ${
