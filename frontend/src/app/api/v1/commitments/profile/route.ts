@@ -1,3 +1,21 @@
+// Demo: static profile for GET (replace with real data source in production)
+const DEMO_PROFILE = {
+    profileId: 'demo_profile_001',
+    ageBucketCommitment: '0x1234567890abcdef',
+    regionCommitment: '0xabcdef1234567890',
+    behaviorCommitment: '0xdeadbeefcafebabe',
+    kycCommitment: '0xfeedfacebadc0ffe',
+    nonce: '0x1a2b3c4d',
+    profileRootCommitment: '0xrootcommitment',
+};
+
+export async function GET() {
+    // In production, fetch from DB or blockchain
+    return NextResponse.json({
+        success: true,
+        data: DEMO_PROFILE,
+    });
+}
 import { NextResponse, NextRequest } from 'next/server';
 import { z } from 'zod';
 import { commitment } from '@/lib/commitments';
