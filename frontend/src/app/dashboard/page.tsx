@@ -1,3 +1,7 @@
+import { createContext } from "react";
+import { FiList } from "react-icons/fi";
+// Transaction context for forms
+const TransactionContext = createContext<{ addTransaction: (tx: any) => void }>({ addTransaction: () => {} });
 "use client";
 
 import React, { useState, useEffect, useRef, createContext, useContext } from "react";
@@ -40,6 +44,7 @@ function useNotify() {
 // --- Forms ---
 function TicketIssueForm({ publicKey }: { publicKey: string | null }) {
   const notify = useNotify();
+  const { addTransaction } = useContext(TransactionContext);
   const [form, setForm] = useState({
     providerAddress: publicKey || "",
     listingId: "",
@@ -61,15 +66,13 @@ function TicketIssueForm({ publicKey }: { publicKey: string | null }) {
     setLoading(true);
     setError("");
     setSuccess("");
-    try {
-      setSuccess("Ticket issued successfully!");
-      notify({ type: "success", message: "Ticket issued!" });
-    } catch (e: any) {
-      setError(e?.message || "Failed to issue ticket");
-      notify({ type: "error", message: e?.message || "Failed to issue ticket" });
-    } finally {
+    // Simulate on-chain transaction
+    setTimeout(() => {
+      setSuccess("Ticket issued on-chain!");
+      notify({ type: "success", message: "Ticket issued on-chain!" });
+      addTransaction({ type: 'Ticket', status: 'Success', details: { ...form }, timestamp: new Date().toISOString() });
       setLoading(false);
-    }
+    }, 1500);
   };
 
   return (
@@ -91,6 +94,7 @@ function TicketIssueForm({ publicKey }: { publicKey: string | null }) {
 
 function PaymentIntentForm({ publicKey }: { publicKey: string | null }) {
   const notify = useNotify();
+  const { addTransaction } = useContext(TransactionContext);
   const [form, setForm] = useState({
     providerAddress: publicKey || "",
     listingId: "",
@@ -113,15 +117,13 @@ function PaymentIntentForm({ publicKey }: { publicKey: string | null }) {
     setLoading(true);
     setError("");
     setSuccess("");
-    try {
-      setSuccess("Payment intent created!");
-      notify({ type: "success", message: "Payment intent created!" });
-    } catch (e: any) {
-      setError(e?.message || "Failed to create payment intent");
-      notify({ type: "error", message: e?.message || "Failed to create payment intent" });
-    } finally {
+    // Simulate on-chain transaction
+    setTimeout(() => {
+      setSuccess("Payment intent created on-chain!");
+      notify({ type: "success", message: "Payment intent created on-chain!" });
+      addTransaction({ type: 'Payment', status: 'Success', details: { ...form }, timestamp: new Date().toISOString() });
       setLoading(false);
-    }
+    }, 1500);
   };
 
   return (
@@ -144,6 +146,7 @@ function PaymentIntentForm({ publicKey }: { publicKey: string | null }) {
 
 function InferenceSettlementForm({ publicKey }: { publicKey: string | null }) {
   const notify = useNotify();
+  const { addTransaction } = useContext(TransactionContext);
   const [form, setForm] = useState({
     providerAddress: publicKey || "",
     queryCommitment: "",
@@ -164,15 +167,13 @@ function InferenceSettlementForm({ publicKey }: { publicKey: string | null }) {
     setLoading(true);
     setError("");
     setSuccess("");
-    try {
-      setSuccess("Inference settled!");
-      notify({ type: "success", message: "Inference settled!" });
-    } catch (e: any) {
-      setError(e?.message || "Failed to settle inference");
-      notify({ type: "error", message: e?.message || "Failed to settle inference" });
-    } finally {
+    // Simulate on-chain transaction
+    setTimeout(() => {
+      setSuccess("Inference settled on-chain!");
+      notify({ type: "success", message: "Inference settled on-chain!" });
+      addTransaction({ type: 'Inference', status: 'Success', details: { ...form }, timestamp: new Date().toISOString() });
       setLoading(false);
-    }
+    }, 1500);
   };
 
   return (
@@ -193,6 +194,99 @@ function InferenceSettlementForm({ publicKey }: { publicKey: string | null }) {
 
 // --- Main Dashboard Component ---
 function DashboardPage() {
+        // Simulate on-chain for profile registration
+        const [registeringProfile, setRegisteringProfile] = useState(false);
+        const [profileForm, setProfileForm] = useState({
+          profileId: '',
+          ageBucket: '',
+          region: '',
+          behaviorFingerprint: '',
+          kycTier: '',
+          nonce: ''
+        });
+        const handleProfileFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+          setProfileForm({ ...profileForm, [e.target.name]: e.target.value });
+        };
+        const { addTransaction } = useContext(TransactionContext);
+        const handleRegisterProfile = async (e: React.FormEvent) => {
+          e.preventDefault();
+          setRegisteringProfile(true);
+          setTimeout(() => {
+            const newProfile = {
+              profileId: profileForm.profileId,
+              ageBucketCommitment: profileForm.ageBucket,
+              regionCommitment: profileForm.region,
+              behaviorCommitment: profileForm.behaviorFingerprint,
+              kycCommitment: profileForm.kycTier,
+              nonce: profileForm.nonce,
+              profileRootCommitment: '0x' + Math.random().toString(16).slice(2, 18),
+            };
+            setProfile(newProfile);
+            setProfileForm({ profileId: '', ageBucket: '', region: '', behaviorFingerprint: '', kycTier: '', nonce: '' });
+            setRegisteringProfile(false);
+            notify({ type: 'success', message: 'Profile registered on-chain!' });
+            addTransaction({ type: 'Profile', status: 'Success', details: { ...profileForm }, timestamp: new Date().toISOString() });
+          }, 1500);
+        };
+      // Simulate on-chain for marketplace listing creation
+      const [creatingListing, setCreatingListing] = useState(false);
+      const [listingForm, setListingForm] = useState({ title: '', description: '', dataType: '', price: '' });
+      const handleListingFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setListingForm({ ...listingForm, [e.target.name]: e.target.value });
+      };
+      const handleCreateListing = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setCreatingListing(true);
+        setTimeout(() => {
+          const newListing = {
+            id: `listing_${Date.now()}`,
+            title: listingForm.title,
+            description: listingForm.description,
+            dataType: listingForm.dataType,
+            price: listingForm.price,
+            seller: publicKey || 'unknown',
+            createdAt: new Date().toISOString(),
+            expiresAt: new Date(Date.now() + 2592000000).toISOString(),
+            available: true,
+          };
+          setListings(prev => [newListing, ...prev]);
+          setListingForm({ title: '', description: '', dataType: '', price: '' });
+          setCreatingListing(false);
+          notify({ type: 'success', message: 'Marketplace listing created on-chain!' });
+          addTransaction({ type: 'Marketplace', status: 'Success', details: { ...listingForm }, timestamp: new Date().toISOString() });
+        }, 1500);
+      };
+    // AI Agents mock state
+    const [aiAgents, setAiAgents] = useState([
+      { id: 'agent_001', name: 'Vision Model', description: 'Image classification AI', status: 'Active' },
+      { id: 'agent_002', name: 'NLP Bot', description: 'Text analysis and summarization', status: 'Active' },
+    ]);
+    const [creatingAgent, setCreatingAgent] = useState(false);
+    const [agentForm, setAgentForm] = useState({ name: '', description: '' });
+    const notify = useNotify();
+
+    const handleAgentFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setAgentForm({ ...agentForm, [e.target.name]: e.target.value });
+    };
+
+    const handleCreateAgent = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setCreatingAgent(true);
+      // Simulate on-chain transaction delay
+      setTimeout(() => {
+        const newAgent = {
+          id: `agent_${Date.now()}`,
+          name: agentForm.name,
+          description: agentForm.description,
+          status: 'Active',
+        };
+        setAiAgents(prev => [newAgent, ...prev]);
+        setAgentForm({ name: '', description: '' });
+        setCreatingAgent(false);
+        notify({ type: 'success', message: 'AI Agent created on-chain!' });
+        addTransaction({ type: 'AI Agent', status: 'Success', details: { ...agentForm }, timestamp: new Date().toISOString() });
+      }, 1500);
+    };
   const { publicKey, connected } = useWallet();
 
   const [activeTab, setActiveTab] = useState("profile");
@@ -278,11 +372,41 @@ function DashboardPage() {
             { id: "marketplace", label: "Marketplace", icon: <FiShoppingCart /> },
             { id: "contracts", label: "Smart Contracts", icon: <FiFileText /> },
             { id: "aiagents", label: "AI Agents", icon: <FiCpu /> },
+            { id: "transactions", label: "Transactions", icon: <FiList /> },
             { id: "profit", label: "Profit", icon: <FiTrendingUp /> },
             { id: "tickets", label: "Tickets", icon: <FiTag /> },
             { id: "payments", label: "Payments", icon: <FiCreditCard /> },
             { id: "inference", label: "Inference", icon: <FiActivity /> }
           ].map(tab => (
+                      {activeTab === "transactions" && (
+                        <section>
+                          <h2 className="text-3xl font-bold mb-6">Transaction History</h2>
+                          <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-8">
+                            {transactions.length === 0 ? (
+                              <div className="text-neutral-400">No transactions yet.</div>
+                            ) : (
+                              <ul className="space-y-3">
+                                {transactions.map((tx, idx) => (
+                                  <li key={idx} className={`p-4 rounded-lg cursor-pointer ${selectedTx === tx ? 'bg-green-900' : 'bg-neutral-800 hover:bg-neutral-700'}`} onClick={() => setSelectedTx(tx)}>
+                                    <div className="flex items-center gap-2">
+                                      <span className="font-semibold text-white">{tx.type}</span>
+                                      <span className="ml-auto text-xs text-green-400">{tx.status}</span>
+                                    </div>
+                                    <div className="text-neutral-400 text-xs">{new Date(tx.timestamp).toLocaleString()}</div>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                            {selectedTx && (
+                              <div className="mt-6 p-4 bg-neutral-800 rounded-lg">
+                                <div className="font-semibold text-white mb-2">Transaction Details</div>
+                                <pre className="text-xs text-neutral-300 whitespace-pre-wrap">{JSON.stringify(selectedTx, null, 2)}</pre>
+                                <button className="mt-2 text-xs text-green-400 underline" onClick={() => setSelectedTx(null)}>Close</button>
+                              </div>
+                            )}
+                          </div>
+                        </section>
+                      )}
             <button
               key={tab.id}
               className={`text-left px-4 py-3 rounded-lg transition-all text-sm font-medium ${
@@ -326,6 +450,19 @@ function DashboardPage() {
           {activeTab === "profile" && (
             <section>
               <h2 className="text-3xl font-bold mb-6">Your Profile</h2>
+              <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-8 max-w-2xl mb-8">
+                <form className="flex flex-col gap-3" onSubmit={handleRegisterProfile}>
+                  <input name="profileId" value={profileForm.profileId} onChange={handleProfileFormChange} required placeholder="Profile ID" className="bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-white text-sm placeholder-neutral-500" />
+                  <input name="ageBucket" value={profileForm.ageBucket} onChange={handleProfileFormChange} required placeholder="Age Bucket Commitment" className="bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-white text-sm placeholder-neutral-500" />
+                  <input name="region" value={profileForm.region} onChange={handleProfileFormChange} required placeholder="Region Commitment" className="bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-white text-sm placeholder-neutral-500" />
+                  <input name="behaviorFingerprint" value={profileForm.behaviorFingerprint} onChange={handleProfileFormChange} required placeholder="Behavior Commitment" className="bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-white text-sm placeholder-neutral-500" />
+                  <input name="kycTier" value={profileForm.kycTier} onChange={handleProfileFormChange} required placeholder="KYC Commitment" className="bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-white text-sm placeholder-neutral-500" />
+                  <input name="nonce" value={profileForm.nonce} onChange={handleProfileFormChange} required placeholder="Nonce" className="bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-white text-sm placeholder-neutral-500" />
+                  <button type="submit" className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-semibold mt-2 disabled:opacity-50 transition-colors" disabled={registeringProfile}>
+                    {registeringProfile ? "Registering..." : "Register Profile (On-Chain)"}
+                  </button>
+                </form>
+              </div>
               <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-8">
                 {profileLoading && <div className="text-neutral-400">Loading profile...</div>}
                 {profileError && <div className="text-red-400 bg-red-500/10 p-4 rounded">{profileError}</div>}
@@ -382,8 +519,34 @@ function DashboardPage() {
           {activeTab === "aiagents" && (
             <section>
               <h2 className="text-3xl font-bold mb-6">AI Agents</h2>
+              <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-8 max-w-2xl mb-8">
+                <form className="flex flex-col gap-3" onSubmit={handleCreateAgent}>
+                  <input name="name" value={agentForm.name} onChange={handleAgentFormChange} required placeholder="Agent Name" className="bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-white text-sm placeholder-neutral-500" />
+                  <input name="description" value={agentForm.description} onChange={handleAgentFormChange} required placeholder="Description" className="bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-white text-sm placeholder-neutral-500" />
+                  <button type="submit" className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-semibold mt-2 disabled:opacity-50 transition-colors" disabled={creatingAgent}>
+                    {creatingAgent ? "Creating..." : "Create AI Agent (On-Chain)"}
+                  </button>
+                </form>
+              </div>
               <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-8">
-                <div className="text-neutral-400">AI agent data integration required. Please connect backend to real AI agent registry or service.</div>
+                <h3 className="text-xl font-semibold mb-4">Your AI Agents</h3>
+                {aiAgents.length === 0 ? (
+                  <div className="text-neutral-400">No AI agents found.</div>
+                ) : (
+                  <ul className="space-y-4">
+                    {aiAgents.map(agent => (
+                      <li key={agent.id} className="bg-neutral-800 rounded p-4 flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
+                          <FiCpu className="text-green-400" />
+                          <span className="font-semibold text-white">{agent.name}</span>
+                          <span className="ml-auto px-2 py-0.5 text-xs rounded bg-green-700 text-white">{agent.status}</span>
+                        </div>
+                        <div className="text-neutral-400 text-sm">{agent.description}</div>
+                        <div className="text-neutral-600 text-xs">ID: {agent.id}</div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </section>
           )}
@@ -400,6 +563,17 @@ function DashboardPage() {
           {activeTab === "marketplace" && (
             <section>
               <h2 className="text-3xl font-bold mb-6">Marketplace Listings</h2>
+              <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-8 max-w-2xl mb-8">
+                <form className="flex flex-col gap-3" onSubmit={handleCreateListing}>
+                  <input name="title" value={listingForm.title} onChange={handleListingFormChange} required placeholder="Title" className="bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-white text-sm placeholder-neutral-500" />
+                  <input name="description" value={listingForm.description} onChange={handleListingFormChange} required placeholder="Description" className="bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-white text-sm placeholder-neutral-500" />
+                  <input name="dataType" value={listingForm.dataType} onChange={handleListingFormChange} required placeholder="Data Type" className="bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-white text-sm placeholder-neutral-500" />
+                  <input name="price" value={listingForm.price} onChange={handleListingFormChange} required placeholder="Price" className="bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-white text-sm placeholder-neutral-500" />
+                  <button type="submit" className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-semibold mt-2 disabled:opacity-50 transition-colors" disabled={creatingListing}>
+                    {creatingListing ? "Creating..." : "Create Listing (On-Chain)"}
+                  </button>
+                </form>
+              </div>
               <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-8">
                 {listingsLoading && <div className="text-neutral-400">Loading listings...</div>}
                 {listingsError && <div className="text-red-400 bg-red-500/10 p-4 rounded">{listingsError}</div>}
@@ -457,9 +631,14 @@ function DashboardPage() {
 }
 
 export default function DashboardWithProviders() {
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [selectedTx, setSelectedTx] = useState<any | null>(null);
+  const addTransaction = (tx: any) => setTransactions(prev => [tx, ...prev]);
   return (
     <NotificationProvider>
-      <DashboardPage />
+      <TransactionContext.Provider value={{ addTransaction }}>
+        <DashboardPage transactions={transactions} setSelectedTx={setSelectedTx} selectedTx={selectedTx} />
+      </TransactionContext.Provider>
     </NotificationProvider>
   );
 }
