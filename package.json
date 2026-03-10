@@ -4,11 +4,11 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "dev": "cd frontend && npm run dev",
-    "build": "cd frontend && npm run build",
-    "start": "cd frontend && npm run start",
-    "lint": "cd frontend && npm run lint",
-    "type-check": "cd frontend && npm run type-check"
+    "dev": "npm install && cd frontend && npm install --legacy-peer-deps && npm run dev",
+    "build": "npm install && cd frontend && npm install --legacy-peer-deps && npm run build",
+    "start": "npm install && cd frontend && npm install --legacy-peer-deps && npm run start",
+    "lint": "cd frontend && npm install --legacy-peer-deps && npm run lint",
+    "type-check": "cd frontend && npm install --legacy-peer-deps && npm run type-check"
   },
   "engines": {
     "node": ">=18.17.0",
@@ -27,5 +27,10 @@
     "@babel/plugin-transform-runtime": "^7.29.0",
     "@babel/preset-env": "^7.29.0",
     "@babel/preset-typescript": "^7.28.5"
+  },
+  "dependencies": {
+    "@demox-labs/aleo-wallet-adapter-react": "^0.0.22",
+    "@demox-labs/aleo-wallet-adapter-reactui": "^0.0.36",
+    "react": "^18.3.1"
   }
 }
