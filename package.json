@@ -4,12 +4,11 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "install:all": "npm install && cd frontend && npm install",
-    "dev": "cd frontend && npm run dev",
-    "build": "cd frontend && npm run build",
-    "start": "cd frontend && npm run start",
-    "lint": "cd frontend && npm run lint",
-    "type-check": "cd frontend && npm run type-check"
+    "dev": "npm install && cd frontend && npm install && npm run dev",
+    "build": "npm install && cd frontend && npm install && npm run build",
+    "start": "npm install && cd frontend && npm install && npm run start",
+    "lint": "cd frontend && npm install && npm run lint",
+    "type-check": "cd frontend && npm install && npm run type-check"
   },
   "engines": {
     "node": ">=18.17.0",
