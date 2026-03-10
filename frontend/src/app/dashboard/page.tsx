@@ -476,9 +476,15 @@ function DashboardPage() {
           </section>
         )}
       </main>
-  // --- Status Bar Component ---
+      {/* Status Bar */}
+      <StatusBar connected={connected} publicKey={publicKey} />
+    </div>
+  );
+}
+
+// --- Status Bar Component ---
 // StatusBar component for wallet/network status
-function StatusBar({ connected, publicKey }) {
+function StatusBar({ connected, publicKey }: { connected: boolean; publicKey: string | null }) {
   // Placeholder for network/security info
   return (
     <div className="w-full bg-neutral-900 border-b border-white/10 px-6 py-2 flex items-center justify-between text-xs">
