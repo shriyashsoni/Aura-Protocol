@@ -264,8 +264,6 @@ function DashboardPage() {
         <div className="[&>.wallet-adapter-dropdown]:w-full [&>.wallet-adapter-button]:bg-white [&>.wallet-adapter-button]:text-black [&>.wallet-adapter-button]:font-medium [&>.wallet-adapter-button]:text-xs [&>.wallet-adapter-button]:rounded [&>.wallet-adapter-button]:h-10 [&>.wallet-adapter-button]:px-4 [&>.wallet-adapter-button]:py-2 [&>.wallet-adapter-button:hover]:bg-neutral-200 [&>.wallet-adapter-button]:transition-colors">
           <WalletMultiButton />
         </div>
-        <StatusBar connected={false} publicKey={publicKey} />
-        <StatusBar connected={connected} publicKey={publicKey} />
       </div>
     );
   }
@@ -442,11 +440,6 @@ function DashboardPage() {
             )}
           </section>
         )}
-
-// (Removed duplicate TicketIssueForm definition)
-
-// ...existing code...
-
         {activeTab === "tickets" && (
           <section>
             <h2 className="text-3xl font-bold mb-6">Tickets</h2>
@@ -455,8 +448,6 @@ function DashboardPage() {
             </div>
           </section>
         )}
-
-// (Removed duplicate TicketIssueForm definition)
         {activeTab === "payments" && (
           <section>
             <h2 className="text-3xl font-bold mb-6">Payments</h2>
