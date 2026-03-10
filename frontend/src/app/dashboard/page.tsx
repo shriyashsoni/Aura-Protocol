@@ -1,3 +1,43 @@
+"use client";
+
+import React, { useState, useEffect, useRef, createContext, useContext } from "react";
+import { WalletMultiButton } from "@demox-labs/aleo-wallet-adapter-reactui";
+import { commitmentsApi, marketplaceApi, payloadsApi } from "../../lib/api-client";
+import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
+import "@demox-labs/aleo-wallet-adapter-reactui/styles.css";
+
+// --- Notification Context and Component ---
+type Notification = { type: "success" | "error" | "info"; message: string };
+const NotificationContext = createContext<{
+  notify: (n: Notification) => void;
+} | null>(null);
+
+function NotificationProvider({ children }: { children: React.ReactNode }) {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const notify = (n: Notification) => {
+    setNotifications([...notifications, n]);
+    setTimeout(() => setNotifications(prev => prev.slice(1)), 3000);
+  };
+  return (
+    <NotificationContext.Provider value={{ notify }}>
+      {children}
+      <div className="fixed bottom-4 right-4 flex flex-col gap-2 pointer-events-none">
+        {notifications.map((n, i) => (
+          <div key={i} className={`px-4 py-2 rounded ${n.type === "success" ? "bg-green-600" : n.type === "error" ? "bg-red-600" : "bg-blue-600"} text-white`}>
+            {n.message}
+          </div>
+        ))}
+      </div>
+    </NotificationContext.Provider>
+  );
+}
+
+function useNotify() {
+  const ctx = useContext(NotificationContext);
+  if (!ctx) throw new Error("useNotify must be used within NotificationProvider");
+  return ctx.notify;
+}
+
 // --- Ticket Issue Form Component ---
 function TicketIssueForm({ publicKey }: { publicKey: string | null }) {
   const notify = useNotify();
@@ -162,48 +202,6 @@ function InferenceSettlementForm({ publicKey }: { publicKey: string | null }) {
       {success && <div className="text-green-400 mt-2">{success}</div>}
     </form>
   );
-}
-"use client";
-
-import { useState, useEffect } from "react";
-// ...existing code...
-import { WalletMultiButton } from "@demox-labs/aleo-wallet-adapter-reactui";
-import { commitmentsApi, marketplaceApi, payloadsApi } from "../../lib/api-client";
-import { useRef } from "react";
-import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
-import "@demox-labs/aleo-wallet-adapter-reactui/styles.css";
-// --- Notification Context and Component ---
-import React, { createContext, useContext } from "react";
-
-type Notification = { type: "success" | "error" | "info"; message: string };
-const NotificationContext = createContext<{
-  notify: (n: Notification) => void;
-} | null>(null);
-
-function NotificationProvider({ children }: { children: React.ReactNode }) {
-  const [notification, setNotification] = useState<Notification | null>(null);
-  const notify = (n: Notification) => {
-    setNotification(n);
-    setTimeout(() => setNotification(null), 4000);
-  };
-  return (
-    <NotificationContext.Provider value={{ notify }}>
-      {children}
-      {notification && (
-        <div className={`fixed top-6 right-6 z-50 px-6 py-3 rounded shadow-lg text-white font-semibold transition-all
-          ${notification.type === "success" ? "bg-green-600" : notification.type === "error" ? "bg-red-600" : "bg-blue-600"}`}
-        >
-          {notification.message}
-        </div>
-      )}
-    </NotificationContext.Provider>
-  );
-}
-
-function useNotify() {
-  const ctx = useContext(NotificationContext);
-  if (!ctx) throw new Error("useNotify must be used within NotificationProvider");
-  return ctx.notify;
 }
 
 function DashboardPage() {
