@@ -282,46 +282,6 @@ function DashboardPage() {
             { id: "payments", label: "Payments", icon: "💳" },
             { id: "inference", label: "Inference", icon: "🧠" }
           ].map(tab => (
-                      {activeTab === "contracts" && (
-                        <section>
-                          <h2 className="text-3xl font-bold mb-6">Smart Contract Addresses</h2>
-                          <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-8">
-                            {contractsLoading && <div className="text-neutral-400">Loading contracts...</div>}
-                            {contractsError && <div className="text-red-400 bg-red-500/10 p-4 rounded">{contractsError}</div>}
-                            {contracts && (
-                              <ul className="space-y-3">
-                                {Object.entries(contracts).map(([key, value]) => (
-                                  <li key={key} className="flex justify-between items-center bg-neutral-800 rounded p-3">
-                                    <span className="font-semibold text-neutral-300">{key}</span>
-                                    <span className="font-mono text-green-400">{value}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            )}
-                            {!contractsLoading && !contractsError && !contracts && (
-                              <div className="text-neutral-400">No contract data available.</div>
-                            )}
-                          </div>
-                        </section>
-                      )}
-
-                      {activeTab === "aiagents" && (
-                        <section>
-                          <h2 className="text-3xl font-bold mb-6">AI Agents</h2>
-                          <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-8">
-                            <div className="text-neutral-400">AI agent data integration required. Please connect backend to real AI agent registry or service.</div>
-                          </div>
-                        </section>
-                      )}
-
-                      {activeTab === "profit" && (
-                        <section>
-                          <h2 className="text-3xl font-bold mb-6">Project Profit</h2>
-                          <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-8">
-                            <div className="text-neutral-400">Profit data integration required. Please connect backend to real profit/earnings data source.</div>
-                          </div>
-                        </section>
-                      )}
             <button
               key={tab.id}
               className={`text-left px-4 py-3 rounded-lg transition-all text-sm font-medium ${
@@ -391,6 +351,47 @@ function DashboardPage() {
                 {!profileLoading && !profileError && !profile && (
                   <div className="text-neutral-400">No profile data available.</div>
                 )}
+              </div>
+            </section>
+          )}
+
+          {activeTab === "contracts" && (
+            <section>
+              <h2 className="text-3xl font-bold mb-6">Smart Contract Addresses</h2>
+              <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-8">
+                {contractsLoading && <div className="text-neutral-400">Loading contracts...</div>}
+                {contractsError && <div className="text-red-400 bg-red-500/10 p-4 rounded">{contractsError}</div>}
+                {contracts && (
+                  <ul className="space-y-3">
+                    {Object.entries(contracts).map(([key, value]) => (
+                      <li key={key} className="flex justify-between items-center bg-neutral-800 rounded p-3">
+                        <span className="font-semibold text-neutral-300">{key}</span>
+                        <span className="font-mono text-green-400">{String(value)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {!contractsLoading && !contractsError && !contracts && (
+                  <div className="text-neutral-400">No contract data available.</div>
+                )}
+              </div>
+            </section>
+          )}
+
+          {activeTab === "aiagents" && (
+            <section>
+              <h2 className="text-3xl font-bold mb-6">AI Agents</h2>
+              <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-8">
+                <div className="text-neutral-400">AI agent data integration required. Please connect backend to real AI agent registry or service.</div>
+              </div>
+            </section>
+          )}
+
+          {activeTab === "profit" && (
+            <section>
+              <h2 className="text-3xl font-bold mb-6">Project Profit</h2>
+              <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-8">
+                <div className="text-neutral-400">Profit data integration required. Please connect backend to real profit/earnings data source.</div>
               </div>
             </section>
           )}
