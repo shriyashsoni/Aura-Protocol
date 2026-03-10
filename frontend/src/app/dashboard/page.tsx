@@ -9,30 +9,26 @@ function TicketIssueForm({ publicKey }: { publicKey: string | null }) {
     paidMicrocredits: "",
     expiresAtEpoch: ""
   });
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-black via-neutral-900 to-neutral-950 text-white font-sans transition-colors duration-300">
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-      <aside className="w-64 bg-gradient-to-b from-neutral-900 via-neutral-950 to-black border-r border-white/10 flex flex-col py-10 px-6 min-h-screen shadow-xl">
-        <div className="mb-10 text-3xl font-extrabold tracking-widest uppercase text-center text-green-400 drop-shadow-lg animate-fade-in">Dashboard</div>
-        <nav className="flex flex-col gap-3">
-          <button className={`text-left px-4 py-2 rounded-lg font-semibold shadow-sm transition-all duration-200 ${activeTab === "profile" ? "bg-green-900/60 text-green-300 scale-105" : "hover:bg-white/10"}`} onClick={() => setActiveTab("profile")}>Profile</button>
-          <button className={`text-left px-4 py-2 rounded-lg font-semibold shadow-sm transition-all duration-200 ${activeTab === "marketplace" ? "bg-green-900/60 text-green-300 scale-105" : "hover:bg-white/10"}`} onClick={() => setActiveTab("marketplace")}>Marketplace</button>
-          <button className={`text-left px-4 py-2 rounded-lg font-semibold shadow-sm transition-all duration-200 ${activeTab === "tickets" ? "bg-green-900/60 text-green-300 scale-105" : "hover:bg-white/10"}`} onClick={() => setActiveTab("tickets")}>Tickets</button>
-          <button className={`text-left px-4 py-2 rounded-lg font-semibold shadow-sm transition-all duration-200 ${activeTab === "payments" ? "bg-green-900/60 text-green-300 scale-105" : "hover:bg-white/10"}`} onClick={() => setActiveTab("payments")}>Payments</button>
-          <button className={`text-left px-4 py-2 rounded-lg font-semibold shadow-sm transition-all duration-200 ${activeTab === "inference" ? "bg-green-900/60 text-green-300 scale-105" : "hover:bg-white/10"}`} onClick={() => setActiveTab("inference")}>Inference</button>
-        <div className="mt-auto pt-10 border-t border-white/10 animate-fade-in">
-          <div className="text-xs text-neutral-400 mb-2">Wallet</div>
-          <div className="font-mono text-green-400 break-all text-xs">{publicKey}</div>
-          <div className="mt-4">
-            <WalletMultiButton />
-          </div>
-        </div>
-      <main className="flex-1 p-10 overflow-y-auto bg-gradient-to-br from-black/60 via-neutral-900/80 to-neutral-950/90 animate-fade-in">
-            <div className="bg-white/10 rounded-2xl p-8 mb-10 shadow-lg border border-white/10 backdrop-blur-md transition-all duration-300">
-            <div className="bg-white/10 rounded-2xl p-8 mb-10 shadow-lg border border-white/10 backdrop-blur-md transition-all duration-300">
-            <div className="bg-white/10 rounded-2xl p-8 mb-10 shadow-lg border border-white/10 backdrop-blur-md transition-all duration-300">
-            <div className="bg-white/10 rounded-2xl p-8 mb-10 shadow-lg border border-white/10 backdrop-blur-md transition-all duration-300">
-            <div className="bg-white/10 rounded-2xl p-8 mb-10 shadow-lg border border-white/10 backdrop-blur-md transition-all duration-300">
-      <div className="w-full bg-neutral-900/80 border-b border-white/10 px-6 py-2 flex items-center justify-between text-xs shadow-md backdrop-blur-md animate-fade-in">
+  const [success, setSuccess] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setSuccess("");
+    try {
+      // TODO: Replace with real API call
+      // await someApi.issueTicket(form);
+      setSuccess("Ticket issued!");
+      notify({ type: "success", message: "Ticket issued!" });
+    } catch (e: any) {
+      setError(e?.message || "Failed to issue ticket");
       notify({ type: "error", message: e?.message || "Failed to issue ticket" });
     } finally {
       setLoading(false);
@@ -210,8 +206,7 @@ function useNotify() {
   return ctx.notify;
 }
 
-export default function DashboardPage() {
-  function DashboardPage() {
+function DashboardPage() {
   const { connected, publicKey } = useWallet();
   const [activeTab, setActiveTab] = useState("profile");
 
@@ -481,26 +476,25 @@ export default function DashboardPage() {
           </section>
         )}
       </main>
-    export default function DashboardWithProviders() {
-      return (
-        <NotificationProvider>
-          <DashboardPage />
-        </NotificationProvider>
-      );
-    }
-    // --- Status Bar Component ---
-    function StatusBar({ connected, publicKey }: { connected: boolean, publicKey: string | null }) {
-      // Placeholder for network/security info
-      return (
-        <div className="w-full bg-neutral-900 border-b border-white/10 px-6 py-2 flex items-center justify-between text-xs">
-          <div>
-            <span className={connected ? "text-green-400" : "text-red-400"}>{connected ? "Wallet Connected" : "Wallet Disconnected"}</span>
-            {publicKey && <span className="ml-4 text-neutral-400">{publicKey.slice(0, 12)}...{publicKey.slice(-6)}</span>}
-          </div>
-          <div className="text-neutral-400">Network: Aleo Testnet | Security: <span className="text-green-400">Secure</span></div>
-        </div>
-      );
-    }
     </div>
+// --- Status Bar Component ---
+function StatusBar({ connected, publicKey }: { connected: boolean, publicKey: string | null }) {
+  // Placeholder for network/security info
+  return (
+    <div className="w-full bg-neutral-900 border-b border-white/10 px-6 py-2 flex items-center justify-between text-xs">
+      <div>
+        <span className={connected ? "text-green-400" : "text-red-400"}>{connected ? "Wallet Connected" : "Wallet Disconnected"}</span>
+        {publicKey && <span className="ml-4 text-neutral-400">{publicKey.slice(0, 12)}...{publicKey.slice(-6)}</span>}
+      </div>
+      <div className="text-neutral-400">Network: Aleo Testnet | Security: <span className="text-green-400">Secure</span></div>
+    </div>
+  );
+}
+
+export default function DashboardWithProviders() {
+  return (
+    <NotificationProvider>
+      <DashboardPage />
+    </NotificationProvider>
   );
 }
