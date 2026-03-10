@@ -4,11 +4,11 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "dev": "npm install && cd frontend && npm install && npm run dev",
-    "build": "npm install && cd frontend && npm install && npm run build",
-    "start": "npm install && cd frontend && npm install && npm run start",
-    "lint": "cd frontend && npm install && npm run lint",
-    "type-check": "cd frontend && npm install && npm run type-check"
+    "dev": "npm install && cd frontend && npm install --legacy-peer-deps && npm run dev",
+    "build": "npm install && cd frontend && npm install --legacy-peer-deps && npm run build",
+    "start": "npm install && cd frontend && npm install --legacy-peer-deps && npm run start",
+    "lint": "cd frontend && npm install --legacy-peer-deps && npm run lint",
+    "type-check": "cd frontend && npm install --legacy-peer-deps && npm run type-check"
   },
   "engines": {
     "node": ">=18.17.0",
