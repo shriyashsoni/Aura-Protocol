@@ -476,8 +476,7 @@ function DashboardPage() {
           </section>
         )}
       </main>
-    </div>
-// --- Status Bar Component ---
+  // --- Status Bar Component ---
 function StatusBar({ connected, publicKey }: { connected: boolean, publicKey: string | null }) {
   // Placeholder for network/security info
   return (
