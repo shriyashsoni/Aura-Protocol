@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, createContext, useContext } from "react";
+import { FiUser, FiShoppingCart, FiFileText, FiCpu, FiTrendingUp, FiTag, FiCreditCard, FiActivity } from "react-icons/fi";
 import { WalletMultiButton } from "@demox-labs/aleo-wallet-adapter-reactui";
 import { commitmentsApi, marketplaceApi, payloadsApi } from "../../lib/api-client";
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
@@ -273,14 +274,14 @@ function DashboardPage() {
         
         <nav className="flex flex-col gap-2 mb-8">
           {[
-            { id: "profile", label: "Profile", icon: "👤" },
-            { id: "marketplace", label: "Marketplace", icon: "🛒" },
-            { id: "contracts", label: "Smart Contracts", icon: "📜" },
-            { id: "aiagents", label: "AI Agents", icon: "🤖" },
-            { id: "profit", label: "Profit", icon: "💰" },
-            { id: "tickets", label: "Tickets", icon: "🎫" },
-            { id: "payments", label: "Payments", icon: "💳" },
-            { id: "inference", label: "Inference", icon: "🧠" }
+            { id: "profile", label: "Profile", icon: <FiUser /> },
+            { id: "marketplace", label: "Marketplace", icon: <FiShoppingCart /> },
+            { id: "contracts", label: "Smart Contracts", icon: <FiFileText /> },
+            { id: "aiagents", label: "AI Agents", icon: <FiCpu /> },
+            { id: "profit", label: "Profit", icon: <FiTrendingUp /> },
+            { id: "tickets", label: "Tickets", icon: <FiTag /> },
+            { id: "payments", label: "Payments", icon: <FiCreditCard /> },
+            { id: "inference", label: "Inference", icon: <FiActivity /> }
           ].map(tab => (
             <button
               key={tab.id}
@@ -291,7 +292,7 @@ function DashboardPage() {
               }`}
               onClick={() => setActiveTab(tab.id)}
             >
-              <span className="mr-2">{tab.icon}</span>{tab.label}
+              <span className="mr-2 text-lg align-middle">{tab.icon}</span>{tab.label}
             </button>
           ))}
         </nav>
