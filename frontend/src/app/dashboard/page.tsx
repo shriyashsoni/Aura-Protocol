@@ -1,10 +1,10 @@
-import { createContext } from "react";
-import { FiList } from "react-icons/fi";
-// Transaction context for forms
-const TransactionContext = createContext<{ addTransaction: (tx: any) => void }>({ addTransaction: () => {} });
 "use client";
 
 import React, { useState, useEffect, useRef, createContext, useContext } from "react";
+import { FiList } from "react-icons/fi";
+
+// Transaction context for forms
+const TransactionContext = createContext<{ addTransaction: (tx: any) => void }>({ addTransaction: () => {} });
 import { FiUser, FiShoppingCart, FiFileText, FiCpu, FiTrendingUp, FiTag, FiCreditCard, FiActivity } from "react-icons/fi";
 import { WalletMultiButton } from "@demox-labs/aleo-wallet-adapter-reactui";
 import { commitmentsApi, marketplaceApi, payloadsApi } from "../../lib/api-client";
