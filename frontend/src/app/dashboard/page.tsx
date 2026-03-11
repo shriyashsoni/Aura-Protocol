@@ -378,35 +378,6 @@ function DashboardPage() {
             { id: "payments", label: "Payments", icon: <FiCreditCard /> },
             { id: "inference", label: "Inference", icon: <FiActivity /> }
           ].map(tab => (
-                      {activeTab === "transactions" && (
-                        <section>
-                          <h2 className="text-3xl font-bold mb-6">Transaction History</h2>
-                          <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-8">
-                            {transactions.length === 0 ? (
-                              <div className="text-neutral-400">No transactions yet.</div>
-                            ) : (
-                              <ul className="space-y-3">
-                                {transactions.map((tx, idx) => (
-                                  <li key={idx} className={`p-4 rounded-lg cursor-pointer ${selectedTx === tx ? 'bg-green-900' : 'bg-neutral-800 hover:bg-neutral-700'}`} onClick={() => setSelectedTx(tx)}>
-                                    <div className="flex items-center gap-2">
-                                      <span className="font-semibold text-white">{tx.type}</span>
-                                      <span className="ml-auto text-xs text-green-400">{tx.status}</span>
-                                    </div>
-                                    <div className="text-neutral-400 text-xs">{new Date(tx.timestamp).toLocaleString()}</div>
-                                  </li>
-                                ))}
-                              </ul>
-                            )}
-                            {selectedTx && (
-                              <div className="mt-6 p-4 bg-neutral-800 rounded-lg">
-                                <div className="font-semibold text-white mb-2">Transaction Details</div>
-                                <pre className="text-xs text-neutral-300 whitespace-pre-wrap">{JSON.stringify(selectedTx, null, 2)}</pre>
-                                <button className="mt-2 text-xs text-green-400 underline" onClick={() => setSelectedTx(null)}>Close</button>
-                              </div>
-                            )}
-                          </div>
-                        </section>
-                      )}
             <button
               key={tab.id}
               className={`text-left px-4 py-3 rounded-lg transition-all text-sm font-medium ${
