@@ -28,6 +28,31 @@ export interface MarketplaceListing {
   available: boolean;
 }
 
+export interface Transaction {
+  id: string;
+  type: 'profile_creation' | 'marketplace_listing' | 'payment' | 'ticket' | 'inference' | 'unknown';
+  userAddress: string;
+  amount?: string;
+  status: 'pending' | 'confirmed' | 'failed';
+  transactionHash?: string;
+  timestamp: string;
+  details: Record<string, unknown>;
+  blockNumber?: number;
+  gasUsed?: string;
+}
+
+export interface DeployedProgram {
+  id: string;
+  name: string;
+  description: string;
+  address: string;
+  status: 'deployed' | 'active' | 'inactive';
+  deployedAt: string;
+  functions: string[];
+  version: string;
+  network: string;
+}
+
 /**
  * Generic fetch wrapper for API calls
  */
@@ -129,11 +154,59 @@ export const commitmentsApi = {
  */
 export const programsApi = {
   getPrograms: async () => {
-    return apiCall('/programs');
+    return apiCall<DeployedProgram[]>('/programs');
   },
 
   getArchitecture: async () => {
     return apiCall('/flow/architecture');
+  },
+
+  getProgramByName: async (name: string) => {
+    const response = await programsApi.getPrograms();
+    if (response.success && response.data) {
+      return {
+        success: true,
+        data: response.data.find((p) => p.name.toLowerCase() === name.toLowerCase()),
+      };
+    }
+    return response;
+  },
+};
+
+/**
+ * Transactions API
+ */
+export const transactionsApi = {
+  getTransactions: async (filters?: {
+    userAddress?: string;
+    type?: string;
+    status?: string;
+    limit?: number;
+  }) => {
+    const params = new URLSearchParams();
+    if (filters?.userAddress) params.append('userAddress', filters.userAddress);
+    if (filters?.type) params.append('type', filters.type);
+    if (filters?.status) params.append('status', filters.status);
+    if (filters?.limit) params.append('limit', String(filters.limit));
+
+    const query = params.toString();
+    return apiCall<Transaction[]>(`/transactions${query ? `?${query}` : ''}`);
+  },
+
+  recordTransaction: async (transaction: {
+    type: string;
+    userAddress: string;
+    status: string;
+    transactionHash?: string;
+    details: Record<string, unknown>;
+    amount?: string;
+    blockNumber?: number;
+    gasUsed?: string;
+  }) => {
+    return apiCall<Transaction>('/transactions', {
+      method: 'POST',
+      body: JSON.stringify(transaction),
+    });
   },
 };
 
@@ -195,6 +268,7 @@ export const api = {
   marketplace: marketplaceApi,
   commitments: commitmentsApi,
   programs: programsApi,
+  transactions: transactionsApi,
   payloads: payloadsApi,
 };
 
