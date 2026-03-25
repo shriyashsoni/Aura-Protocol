@@ -4,7 +4,7 @@ import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
 import { Transaction, WalletAdapterNetwork } from "@demox-labs/aleo-wallet-adapter-base";
 import { useState } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+const API_URL = "/api";
 
 type ProfileForm = {
   profileId: string;
