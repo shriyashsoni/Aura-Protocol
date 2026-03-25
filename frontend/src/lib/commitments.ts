@@ -19,16 +19,33 @@ export function hashToField(...parts: (string | number)[]): string {
 
 export function toField(value: string | number): string {
   const raw = String(value).replace(/field$/i, "").trim();
-  const n = BigInt(raw) % FIELD_PRIME;
-  return `${n === BigInt(0) ? BigInt(1) : n}field`;
+  
+  // If it's already a numeric string, convert to BigInt
+  if (/^\d+$/.test(raw)) {
+    const n = BigInt(raw) % FIELD_PRIME;
+    return `${n === BigInt(0) ? BigInt(1) : n}field`;
+  }
+  
+  // Otherwise, hash the alphanumeric string into the field range
+  return hashToField(raw);
 }
 
 export function toU32(value: number | string): string {
-  return `${Math.max(1, Math.floor(Number(value)))}u32`;
+  const raw = String(value).replace(/[^\d]/g, "");
+  const num = parseInt(raw, 10) || 1;
+  const final = Math.max(1, num);
+  return `${final}u32`;
 }
 
 export function toU64(value: number | string): string {
-  return `${Math.max(1, Math.floor(Number(value)))}u64`;
+  const raw = String(value).replace(/[^\d]/g, "");
+  try {
+    const n = BigInt(raw || "1");
+    const final = n > BigInt(0) ? n : BigInt(1);
+    return `${final}u64`;
+  } catch {
+    return "1u64";
+  }
 }
 
 export function buildProfileCommitments(data: {
