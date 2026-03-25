@@ -4,7 +4,7 @@ import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
 import { Transaction, WalletAdapterNetwork } from "@demox-labs/aleo-wallet-adapter-base";
 import { useState } from "react";
 
-const API_URL = "/api";
+
 
 type ProfileForm = {
   profileId: string;
@@ -43,7 +43,7 @@ export default function IdentityManager() {
       setTxId(null);
 
       // 1. Generate ZKP commitments
-      const commitRes = await fetch(API_URL + "/v1/commitments/profile", {
+      const commitRes = await fetch("/api/v1/profile/commitments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -54,7 +54,7 @@ export default function IdentityManager() {
       setStatus("building");
 
       // 2. Build Aleo payload
-      const payloadRes = await fetch(API_URL + "/v1/payloads/profile/register", {
+      const payloadRes = await fetch("/api/v1/profile/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

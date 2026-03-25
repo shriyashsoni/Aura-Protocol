@@ -15,10 +15,8 @@ export async function POST(req: Request) {
     const body = await req.json();
     const parsed = Schema.safeParse(body);
     if (!parsed.success) return NextResponse.json({ error: "Invalid input" }, { status: 400 });
-    
     const d = parsed.data;
     const paymentCommitment = d.paymentCommitment ?? hashToField("payment", d.intentId, d.listingId, d.amountMicrocredits);
-    
     return NextResponse.json({
       ok: true,
       programId: "payment_router.aleo",

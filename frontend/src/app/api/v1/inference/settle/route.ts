@@ -16,12 +16,9 @@ export async function POST(req: Request) {
     const body = await req.json();
     const parsed = Schema.safeParse(body);
     if (!parsed.success) return NextResponse.json({ error: "Invalid input" }, { status: 400 });
-    
     const d = parsed.data;
     const queryCommitment = d.queryCommitment ?? hashToField("query", d.listingId, d.ticketId);
     const outputCommitment = d.outputCommitment ?? hashToField("output", d.listingId, d.ticketId, Date.now());
-    const settledEpoch = d.settledEpoch ?? 1;
-    
     return NextResponse.json({
       ok: true,
       programId: "inference_settlement.aleo",
@@ -32,7 +29,7 @@ export async function POST(req: Request) {
         ticket_id: toField(d.ticketId),
         query_commitment: toField(queryCommitment),
         output_commitment: toField(outputCommitment),
-        settled_epoch: toU32(settledEpoch),
+        settled_epoch: toU32(d.settledEpoch || 1),
       },
     });
   } catch (err) {

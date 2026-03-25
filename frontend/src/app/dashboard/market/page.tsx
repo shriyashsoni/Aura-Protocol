@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
 import { Transaction, WalletAdapterNetwork } from "@demox-labs/aleo-wallet-adapter-base";
 
-const API_URL = "/api";
+
 
 type FormState = {
   listingId: string;
@@ -40,7 +40,7 @@ export default function DataMarketPage() {
     setTxId(null);
 
     try {
-      const payloadRes = await fetch(API_URL + "/v1/payloads/market/create", {
+      const payloadRes = await fetch("/api/v1/market/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

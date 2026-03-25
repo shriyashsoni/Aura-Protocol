@@ -16,11 +16,9 @@ export async function POST(req: Request) {
     const body = await req.json();
     const parsed = Schema.safeParse(body);
     if (!parsed.success) return NextResponse.json({ error: "Invalid input" }, { status: 400 });
-    
     const d = parsed.data;
     const profileRootCommitment = d.profileRootCommitment ?? hashToField("root", d.profileId, d.listingId);
     const featureSchemaCommitment = d.featureSchemaCommitment ?? hashToField("schema", d.listingId);
-    
     return NextResponse.json({
       ok: true,
       programId: "data_market.aleo",

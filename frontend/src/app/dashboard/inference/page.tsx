@@ -32,7 +32,7 @@ export default function InferenceEngine() {
     try {
       setLoading(true);
 
-      const payloadRes = await fetch(API_URL + "/v1/payloads/inference/settle", {
+      const payloadRes = await fetch("/api/v1/inference/settle", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

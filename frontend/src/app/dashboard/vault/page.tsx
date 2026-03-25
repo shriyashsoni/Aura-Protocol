@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
 import { Transaction, WalletAdapterNetwork } from "@demox-labs/aleo-wallet-adapter-base";
 
-const API_URL = "/api";
+
 
 type IntentForm = {
   providerAddress: string;
@@ -41,7 +41,7 @@ export default function EscrowVaultPage() {
     setTxId(null);
 
     try {
-      const payloadRes = await fetch(API_URL + "/v1/payloads/payment/intent", {
+      const payloadRes = await fetch("/api/v1/payment/intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
