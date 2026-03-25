@@ -1,0 +1,6 @@
+{
+  "program": "payment_router.aleo",
+  "version": "0.0.0",
+  "description": "Trustless Aleo credit escrow and routing for Aura Protocol",
+  "license": "MIT"
+}

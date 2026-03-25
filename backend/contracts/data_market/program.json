@@ -1,0 +1,6 @@
+{
+  "program": "data_market.aleo",
+  "version": "0.0.0",
+  "description": "Private dataset listing catalogue for Aura Protocol",
+  "license": "MIT"
+}

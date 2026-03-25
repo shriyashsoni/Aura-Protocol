@@ -1,0 +1,6 @@
+{
+  "program": "profile_registry.aleo",
+  "version": "0.0.0",
+  "description": "ZK identity and demographic commitment registry for Aura Protocol",
+  "license": "MIT"
+}

@@ -1,0 +1,6 @@
+{
+  "program": "access_ticketing.aleo",
+  "version": "0.0.0",
+  "description": "Proof-of-purchase access ticket minting for Aura Protocol",
+  "license": "MIT"
+}

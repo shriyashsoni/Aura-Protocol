@@ -1,36 +1,36 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-
-dotenv.config();
+import "dotenv/config";
+import { healthRouter } from "./routes/health.js";
+import { marketplaceRouter } from "./routes/marketplace.js";
 
 const app = express();
-app.use(cors());
+const PORT = process.env.PORT || 3001;
+
+// ─── Middleware ────────────────────────────────────────────────────────────────
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
-// Health check endpoint
-app.get("/health", (req, res) => {
-  res.json({ success: true, status: "ok", timestamp: new Date().toISOString() });
+// ─── Routes ───────────────────────────────────────────────────────────────────
+app.use("/v1/health", healthRouter);
+app.use("/v1/commitments", marketplaceRouter);
+app.use("/v1/payloads", marketplaceRouter);
+
+// ─── 404 Fallback ─────────────────────────────────────────────────────────────
+app.use((_req, res) => {
+  res.status(404).json({ error: "Route not found" });
 });
 
-// Marketplace endpoint (placeholder)
-
-import { config } from "./lib/config";
-import { queryAleoProgram } from "./lib/aleo-rpc";
-
-app.get("/marketplace/listings", async (req, res) => {
-  try {
-    // Example: Query all listings from the data_market contract
-    const result = await queryAleoProgram(config.programs.dataMarket, "state");
-    res.json({ success: true, data: result });
-  } catch (e: any) {
-    res.status(500).json({ success: false, error: e.message });
-  }
-});
-
-// Add more endpoints for tickets, payments, inference, etc.
-
-const PORT = process.env.PORT || 4000;
+// ─── Start ────────────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`API server running on port ${PORT}`);
+  console.log(`\n🟢 Aura Protocol API running on http://localhost:${PORT}`);
+  console.log(`   Health:  GET  /v1/health`);
+  console.log(`   Profile: POST /v1/commitments/profile`);
+  console.log(`   Profile: POST /v1/payloads/profile/register`);
+  console.log(`   Market:  POST /v1/payloads/market/create`);
+  console.log(`   Payment: POST /v1/payloads/payment/intent`);
+  console.log(`   Ticket:  POST /v1/payloads/ticket/issue`);
+  console.log(`   Infer:   POST /v1/payloads/inference/settle\n`);
 });
+
+export default app;

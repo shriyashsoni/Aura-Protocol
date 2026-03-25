@@ -1,0 +1,6 @@
+{
+  "program": "inference_settlement.aleo",
+  "version": "0.0.0",
+  "description": "On-chain verifiable ML inference receipt settlement for Aura Protocol",
+  "license": "MIT"
+}
