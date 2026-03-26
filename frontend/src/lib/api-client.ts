@@ -1,6 +1,7 @@
 /**
  * Aura Protocol API Client
- * Centralized API communication for all frontend requests
+ * Centralized API communication for all frontend requests.
+ * Aligned with the standardized Aura V1 API routing.
  */
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api/v1';
@@ -99,177 +100,66 @@ async function apiCall<T>(
 }
 
 /**
- * Health Check API
+ * [AURA V1] Standardized API Endpoints
  */
-export const healthApi = {
-  check: async () => {
-    return apiCall('/health');
-  },
-};
 
-/**
- * Marketplace API
- */
-export const marketplaceApi = {
-  getListings: async (filters?: { dataType?: string; available?: boolean }) => {
-    const params = new URLSearchParams();
-    if (filters?.dataType) params.append('dataType', filters.dataType);
-    if (filters?.available !== undefined) params.append('available', String(filters.available));
-    
-    const query = params.toString();
-    return apiCall<MarketplaceListing[]>(`/marketplace/listings${query ? `?${query}` : ''}`);
-  },
-
-  createListing: async (listing: {
-    title: string;
-    description: string;
-    dataType: string;
-    price: string;
-    seller: string;
-  }) => {
-    return apiCall('/marketplace/listings', {
-      method: 'POST',
-      body: JSON.stringify(listing),
-    });
-  },
-};
-
-/**
- * Commitments API
- */
-export const commitmentsApi = {
-  getProfile: async () => {
-    return apiCall('/commitments/profile');
-  },
-
-  query: async (params?: Record<string, string>) => {
-    const searchParams = new URLSearchParams(params);
-    const query = searchParams.toString();
-    return apiCall(`/commitments/query${query ? `?${query}` : ''}`);
-  },
-};
-
-/**
- * Programs API
- */
-export const programsApi = {
-  getPrograms: async () => {
-    return apiCall<DeployedProgram[]>('/programs');
-  },
-
-  getArchitecture: async () => {
-    return apiCall('/flow/architecture');
-  },
-
-  getProgramByName: async (name: string) => {
-    const response = await programsApi.getPrograms();
-    if (response.success && response.data) {
-      return {
-        success: true,
-        data: response.data.find((p) => p.name.toLowerCase() === name.toLowerCase()),
-      };
-    }
-    return response;
-  },
-};
-
-/**
- * Transactions API
- */
-export const transactionsApi = {
-  getTransactions: async (filters?: {
-    userAddress?: string;
-    type?: string;
-    status?: string;
-    limit?: number;
-  }) => {
-    const params = new URLSearchParams();
-    if (filters?.userAddress) params.append('userAddress', filters.userAddress);
-    if (filters?.type) params.append('type', filters.type);
-    if (filters?.status) params.append('status', filters.status);
-    if (filters?.limit) params.append('limit', String(filters.limit));
-
-    const query = params.toString();
-    return apiCall<Transaction[]>(`/transactions${query ? `?${query}` : ''}`);
-  },
-
-  recordTransaction: async (transaction: {
-    type: string;
-    userAddress: string;
-    status: string;
-    transactionHash?: string;
-    details: Record<string, unknown>;
-    amount?: string;
-    blockNumber?: number;
-    gasUsed?: string;
-  }) => {
-    return apiCall<Transaction>('/transactions', {
-      method: 'POST',
-      body: JSON.stringify(transaction),
-    });
-  },
-};
-
-/**
- * Payloads API
- */
-export const payloadsApi = {
-  createProfilePayload: async (data: Record<string, unknown>) => {
-    return apiCall('/payloads/profile/register', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  },
-
-  createMarketPayload: async (data: Record<string, unknown>) => {
-    return apiCall('/payloads/market/create-listing', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  },
-
-  createPaymentPayload: async (data: Record<string, unknown>) => {
-    return apiCall('/payloads/payment/create-intent', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  },
-
-  createTicketPayload: async (data: Record<string, unknown>) => {
-    return apiCall('/payloads/ticket/issue', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  },
-
-  settleInference: async (data: Record<string, unknown>) => {
-    return apiCall('/payloads/inference/settle', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  },
-};
-
-/**
- * Create an error handler for API responses
- */
-export function handleApiError(response: ApiResponse<unknown>): string {
-  if (!response.success) {
-    return response.details ? `${response.error}: ${response.details}` : response.error || 'Unknown error';
-  }
-  return '';
-}
-
-/**
- * Export all API modules
- */
 export const api = {
-  health: healthApi,
-  marketplace: marketplaceApi,
-  commitments: commitmentsApi,
-  programs: programsApi,
-  transactions: transactionsApi,
-  payloads: payloadsApi,
+  health: {
+    check: () => apiCall('/health'),
+  },
+
+  marketplace: {
+    getListings: async (filters?: { dataType?: string; available?: boolean }) => {
+      const params = new URLSearchParams();
+      if (filters?.dataType) params.append('dataType', filters.dataType);
+      if (filters?.available !== undefined) params.append('available', String(filters.available));
+      const query = params.toString();
+      return apiCall<MarketplaceListing[]>(`/marketplace/listings${query ? `?${query}` : ''}`);
+    },
+    // Payload for creating a listing on-chain
+    createListingPayload: (data: Record<string, unknown>) => 
+      apiCall('/payloads/market/create', { method: 'POST', body: JSON.stringify(data) }),
+  },
+
+  commitments: {
+    // Generate ZK commitments for profile data
+    generateProfile: (data: Record<string, unknown>) => 
+      apiCall('/commitments/profile', { method: 'POST', body: JSON.stringify(data) }),
+    
+    // Query existing commitments on-chain (stubbed)
+    query: (params?: Record<string, string>) => {
+      const query = new URLSearchParams(params).toString();
+      return apiCall(`/commitments/query${query ? `?${query}` : ''}`);
+    },
+  },
+
+  payloads: {
+    registerProfile: (data: Record<string, unknown>) => 
+      apiCall('/payloads/profile/register', { method: 'POST', body: JSON.stringify(data) }),
+    
+    createPaymentIntent: (data: Record<string, unknown>) => 
+      apiCall('/payloads/payment/intent', { method: 'POST', body: JSON.stringify(data) }),
+    
+    issueTicket: (data: Record<string, unknown>) => 
+      apiCall('/payloads/ticket/issue', { method: 'POST', body: JSON.stringify(data) }),
+    
+    settleInference: (data: Record<string, unknown>) => 
+      apiCall('/payloads/inference/settle', { method: 'POST', body: JSON.stringify(data) }),
+  },
+
+  programs: {
+    getPrograms: () => apiCall<DeployedProgram[]>('/programs'),
+    getArchitecture: () => apiCall('/flow/architecture'),
+  },
+
+  transactions: {
+    getTransactions: (filters?: Record<string, string>) => {
+      const query = new URLSearchParams(filters).toString();
+      return apiCall<Transaction[]>(`/transactions${query ? `?${query}` : ''}`);
+    },
+    recordTransaction: (data: Record<string, unknown>) => 
+      apiCall('/transactions', { method: 'POST', body: JSON.stringify(data) }),
+  },
 };
 
 export default api;
