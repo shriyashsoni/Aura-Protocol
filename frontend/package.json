@@ -15,6 +15,7 @@
     "@demox-labs/aleo-wallet-adapter-react": "^0.0.22",
     "@demox-labs/aleo-wallet-adapter-reactui": "^0.0.36",
     "@provablehq/aleo-wallet-adaptor-puzzle": "^0.3.0-alpha.3",
+    "@provablehq/aleo-wallet-adaptor-shield": "^0.3.0-alpha.3",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
     "framer-motion": "^12.35.1",
