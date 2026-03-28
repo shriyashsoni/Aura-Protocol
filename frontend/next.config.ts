@@ -3,7 +3,14 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: false,
   experimental: {
-    serverComponentsExternalPackages: ["@demox-labs/aleo-wallet-adapter-base", "@demox-labs/aleo-wallet-adapter-leo", "@demox-labs/aleo-wallet-adapter-react", "@provablehq/aleo-wallet-adaptor-shield", "@provablehq/aleo-wallet-adaptor-puzzle"],
+    serverComponentsExternalPackages: [
+      "@demox-labs/aleo-wallet-adapter-base",
+      "@demox-labs/aleo-wallet-adapter-leo",
+      "@demox-labs/aleo-wallet-adapter-react",
+      "@demox-labs/aleo-wallet-adapter-reactui",
+      "@provablehq/aleo-wallet-adaptor-shield",
+      "@provablehq/aleo-wallet-adaptor-puzzle"
+    ],
   },
   webpack: (config, { isServer }) => {
     // WASM support setup

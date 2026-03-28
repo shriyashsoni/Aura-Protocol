@@ -1,9 +1,14 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { AleoWalletProvider } from './components/AleoWalletProvider';
+import dynamic from 'next/dynamic';
 
 const inter = Inter({ subsets: ['latin'] });
+
+const AleoWalletProvider = dynamic(
+  () => import('./components/AleoWalletProvider').then(mod => mod.AleoWalletProvider),
+  { ssr: false }
+);
 
 export const metadata: Metadata = {
   title: 'Aura Protocol | Web3 AI Infrastructure',
