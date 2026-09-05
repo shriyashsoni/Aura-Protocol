@@ -32,7 +32,7 @@ export async function POST(req: Request) {
         settled_epoch: toU32(d.settledEpoch || 1),
       },
     });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: "Internal Error" }, { status: 500 });
   }
 }

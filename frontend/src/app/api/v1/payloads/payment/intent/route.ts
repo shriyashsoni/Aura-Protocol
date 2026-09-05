@@ -29,7 +29,7 @@ export async function POST(req: Request) {
         payment_commitment: toField(paymentCommitment),
       },
     });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: "Internal Error" }, { status: 500 });
   }
 }

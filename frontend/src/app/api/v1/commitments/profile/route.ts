@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     if (!parsed.success) return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     const output = buildProfileCommitments(parsed.data);
     return NextResponse.json({ ok: true, output });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: "Internal Error" }, { status: 500 });
   }
 }

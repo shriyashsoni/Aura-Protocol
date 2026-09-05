@@ -2,14 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: false,
-  serverExternalPackages: [
-      "@demox-labs/aleo-wallet-adapter-base",
-      "@demox-labs/aleo-wallet-adapter-leo",
-      "@demox-labs/aleo-wallet-adapter-react",
-      "@demox-labs/aleo-wallet-adapter-reactui",
-      "@provablehq/aleo-wallet-adaptor-shield",
-      "@provablehq/aleo-wallet-adaptor-puzzle"
-  ],
   webpack: (config, { isServer }) => {
     // WASM support setup
     config.experiments = {
@@ -17,12 +9,6 @@ const nextConfig: NextConfig = {
       asyncWebAssembly: true,
       layers: true,
     };
-
-    // Mark wallet adapter packages as external on the server side
-    // This is crucial to prevent server-side WASM bundling issues
-    if (isServer) {
-        config.externals.push(/@provablehq\//, /@demox-labs\//);
-    }
 
     // Fallback for Node.js built-ins in the browser
     if (!isServer) {

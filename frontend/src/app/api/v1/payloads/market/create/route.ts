@@ -32,7 +32,7 @@ export async function POST(req: Request) {
         inference_quota: toU32(d.inferenceQuota),
       },
     });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: "Internal Error" }, { status: 500 });
   }
 }

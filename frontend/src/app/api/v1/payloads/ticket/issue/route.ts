@@ -33,7 +33,7 @@ export async function POST(req: Request) {
         expires_at_epoch: toU32(expiresAtEpoch),
       },
     });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: "Internal Error" }, { status: 500 });
   }
 }

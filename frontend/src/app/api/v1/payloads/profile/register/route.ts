@@ -30,7 +30,7 @@ export async function POST(req: Request) {
         nonce: toField(d.nonce),
       },
     });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: "Internal Error" }, { status: 500 });
   }
 }
