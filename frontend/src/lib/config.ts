@@ -1,11 +1,12 @@
 export const config = {
-aleoNetwork: process.env.ALEO_NETWORK || "testnet",
-aleoRpcUrl: process.env.ALEO_RPC_URL || "https://api.explorer.provable.com/v1",
+	chain: {
+		id: Number(process.env.NEXT_PUBLIC_CHAIN_ID || 677),
+		name: process.env.NEXT_PUBLIC_CHAIN_NAME || "Bot Chain",
+		rpcUrl: process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.botchain.ai",
+		explorerUrl: process.env.NEXT_PUBLIC_EXPLORER_URL || "https://scan.botchain.ai",
+		nativeCurrency: process.env.NEXT_PUBLIC_NATIVE_CURRENCY || "BOT",
+	},
 programs: {
-profileRegistry: process.env.PROGRAM_PROFILE_REGISTRY || "profile_registry.aleo",
-dataMarket: process.env.PROGRAM_DATA_MARKET || "data_market.aleo",
-accessTicketing: process.env.PROGRAM_ACCESS_TICKETING || "access_ticketing.aleo",
-inferenceSettlement: process.env.PROGRAM_INFERENCE_SETTLEMENT || "inference_settlement.aleo",
-paymentRouter: process.env.PROGRAM_PAYMENT_ROUTER || "payment_router.aleo",
+		auraProtocol: process.env.NEXT_PUBLIC_AURA_PROTOCOL_ADDRESS || "",
 },
 };

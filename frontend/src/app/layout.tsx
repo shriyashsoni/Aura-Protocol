@@ -1,14 +1,6 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
-import dynamic from 'next/dynamic';
-
-const inter = Inter({ subsets: ['latin'] });
-
-const AleoWalletProvider = dynamic(
-  () => import('./components/AleoWalletProvider').then(mod => mod.AleoWalletProvider),
-  { ssr: false }
-);
+import { WalletProviders } from './components/WalletProviders';
 
 export const metadata: Metadata = {
   title: 'Aura Protocol | Web3 AI Infrastructure',
@@ -22,10 +14,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={inter.className}>
-        <AleoWalletProvider>
+      <body>
+        <WalletProviders>
           {children}
-        </AleoWalletProvider>
+        </WalletProviders>
       </body>
     </html>
   );

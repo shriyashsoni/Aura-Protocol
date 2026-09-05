@@ -9,13 +9,10 @@ healthRouter.get("/", (_req: Request, res: Response) => {
     version: "1.0.0",
     timestamp: new Date().toISOString(),
     contracts: {
-      profile_registry: "profile_registry.aleo",
-      data_market: "data_market.aleo",
-      access_ticketing: "access_ticketing.aleo",
-      inference_settlement: "inference_settlement.aleo",
-      payment_router: "payment_router.aleo",
+      aura_protocol: process.env.AURA_PROTOCOL_ADDRESS || null,
     },
-    network: "aleo-testnet",
-    explorer: "https://api.explorer.provable.com/v1/testnet",
+    network: "bot-chain",
+    rpc: process.env.BOTCHAIN_RPC_URL || "https://rpc.botchain.ai",
+    explorer: "https://scan.botchain.ai",
   });
 });

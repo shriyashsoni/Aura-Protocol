@@ -1,4 +1,4 @@
-import { config } from "./config";
+import { config } from "./config.js";
 
 export async function queryAleoProgram(programId: string, endpoint: string, params: Record<string, any> = {}) {
   const url = `${config.aleoRpcUrl}/program/${programId}/${endpoint}`;

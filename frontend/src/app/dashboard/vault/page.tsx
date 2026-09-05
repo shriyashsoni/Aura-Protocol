@@ -1,6 +1,6 @@
 "use client";
 
-import { Wallet, CheckCircle2, Loader2, AlertCircle, ExternalLink, XCircle } from "lucide-react";
+import { Wallet, CheckCircle2, Loader2, AlertCircle, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
 import { Transaction, WalletAdapterNetwork } from "@demox-labs/aleo-wallet-adapter-base";
@@ -66,9 +66,9 @@ export default function EscrowVaultPage() {
       const result = await requestTransaction?.(aleoTx);
       setTxId(result ?? "submitted");
       setStatus("done");
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
-      setErrorMsg(err.message || "Unknown error");
+      setErrorMsg(err instanceof Error ? err.message : "Unknown error");
       setStatus("error");
     }
   };

@@ -9,12 +9,14 @@
     "dev": "npm run dev --workspace=frontend",
     "build": "npm run build --workspace=frontend",
     "start": "npm run start --workspace=frontend",
-    "lint": "npm run lint --workspace=frontend"
+    "lint": "npm run lint --workspace=frontend",
+    "wallet": "npm --prefix backend/contracts/evm run wallet",
+    "deploy": "npm --prefix backend/contracts/evm run deploy"
   },
   "engines": {
     "node": ">=18.17.0"
   },
-  "dependencies": {
-    "next": "^16.2.1"
+  "devDependencies": {
+    "postcss": "^8.4.47"
   }
 }

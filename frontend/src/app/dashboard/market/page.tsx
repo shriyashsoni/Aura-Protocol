@@ -70,9 +70,9 @@ export default function DataMarketPage() {
       const result = await requestTransaction?.(aleoTx);
       setTxId(result ?? "submitted");
       setStatus("done");
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
-      setErrorMsg(err.message || "Unknown error");
+      setErrorMsg(err instanceof Error ? err.message : "Unknown error");
       setStatus("error");
     }
   };

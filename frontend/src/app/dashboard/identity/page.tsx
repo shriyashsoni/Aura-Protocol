@@ -84,9 +84,9 @@ export default function IdentityManager() {
       const txResult = await requestTransaction?.(aleoTx) ?? "";
       setTxId(txResult);
       setStatus("done");
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
-      setErrorMsg(err.message || "Failed to register identity");
+      setErrorMsg(err instanceof Error ? err.message : "Failed to register identity");
       setStatus("error");
     }
   };

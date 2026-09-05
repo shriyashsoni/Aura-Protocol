@@ -5,6 +5,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
 import { WalletMultiButton } from "@demox-labs/aleo-wallet-adapter-reactui";
 import "@demox-labs/aleo-wallet-adapter-reactui/styles.css";
@@ -15,19 +16,12 @@ import {
   Database,
   Terminal,
   Coins,
-  Wallet,
-  Send,
   Activity,
 } from "lucide-react";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
 };
 
 export default function DAppPage() {
@@ -55,12 +49,12 @@ export default function DAppPage() {
       <div className="bg-yellow-900 text-yellow-200 text-center py-2 font-bold">This is the legacy dashboard. Please use the new Dashboard for live features.</div>
       <header className="flex justify-between items-center px-8 py-6 border-b border-white/10 sticky top-0 bg-black/80 backdrop-blur-md z-50">
         <div className="flex items-center space-x-3">
-          <a href="/" className="flex items-center space-x-3">
+          <Link href="/" className="flex items-center space-x-3">
             <div className="w-8 h-8 border border-white flex items-center justify-center rotate-45">
               <Brain className="w-4 h-4 -rotate-45" />
             </div>
             <span className="font-bold text-xl tracking-widest uppercase">Aura dApp</span>
-          </a>
+          </Link>
           <button
             className="ml-6 px-4 py-2 bg-white text-black rounded hover:bg-neutral-200 transition-colors"
             onClick={() => router.push('/dashboard')}

@@ -63,9 +63,9 @@ export default function InferenceEngine() {
       const txId = (await requestTransaction?.(aleoTx)) ?? "";
       addLog(`✓ Inference settled on-chain · TX: ${txId}`);
       addLog("Secure enclave state flushed. Settlement receipt committed.");
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
-      addLog(`[ERROR] ${err.message || "Failed to run inference"}`);
+      addLog(`[ERROR] ${err instanceof Error ? err.message : "Failed to run inference"}`);
     } finally {
       setLoading(false);
     }

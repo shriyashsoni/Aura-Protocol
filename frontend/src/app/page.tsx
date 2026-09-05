@@ -18,10 +18,7 @@ import {
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
-import { WalletMultiButton } from "@demox-labs/aleo-wallet-adapter-reactui";
-import "@demox-labs/aleo-wallet-adapter-reactui/styles.css";
+import { useEvmWallet } from "./components/AleoWalletProvider";
 
 const Hero3D = dynamic(() => import("./components/Hero3D"), { ssr: false });
 
@@ -41,7 +38,7 @@ const TickerItem = () => (
       className="text-2xl md:text-4xl font-black uppercase tracking-widest text-transparent transition-colors hover:text-white"
       style={{ WebkitTextStroke: "1px rgba(255,255,255,0.3)" }}
     >
-      Aleo Network
+      Bot Chain
     </span>
     <span className="w-3 h-3 rounded-full bg-white"></span>
     <span className="text-2xl md:text-4xl font-black uppercase tracking-widest text-white">
@@ -70,7 +67,7 @@ const TickerItem = () => (
 );
 
 export default function Home() {
-  const { connected } = useWallet();
+  const { isConnected, address, connect, disconnect, chainId } = useEvmWallet();
   const router = useRouter();
 
   return (
@@ -100,9 +97,14 @@ export default function Home() {
           <a href="#docs" className="hover:text-white transition-colors">Whitepaper</a>
         </nav>
         <div className="flex flex-1 justify-end">
-          <div className="[&>.wallet-adapter-dropdown]:w-full [&>.wallet-adapter-button]:bg-white [&>.wallet-adapter-button]:text-black [&>.wallet-adapter-button]:font-medium [&>.wallet-adapter-button]:text-xs [&>.wallet-adapter-button]:rounded [&>.wallet-adapter-button]:h-8 [&>.wallet-adapter-button]:px-2 [&>.wallet-adapter-button]:py-1 [&>.wallet-adapter-button:hover]:bg-neutral-200 [&>.wallet-adapter-button]:transition-colors">
-            <WalletMultiButton />
-          </div>
+          <button
+            type="button"
+            onClick={isConnected ? disconnect : connect}
+            className="bg-white text-black text-xs font-medium rounded h-8 px-3 hover:bg-neutral-200 transition-colors"
+            title={chainId && chainId !== 677 ? "Switch your wallet to Bot Chain" : undefined}
+          >
+            {isConnected ? `${address?.slice(0, 6)}...${address?.slice(-4)}` : "Connect Wallet"}
+          </button>
         </div>
       </header>
 
@@ -116,7 +118,7 @@ export default function Home() {
           >
             <motion.div variants={fadeIn} className="inline-flex items-center space-x-2 border border-white/10 rounded-full px-3 py-1 text-[10px] md:text-xs tracking-[0.16em] uppercase mb-6 bg-white/5 shadow-[0_0_15px_rgba(255,255,255,0.05)]">
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-              <span className="text-neutral-300">V1.0 LIVE ON ALEO TESTNET</span>
+              <span className="text-neutral-300">V1.0 LIVE ON BOT CHAIN</span>
             </motion.div>
 
             <motion.h1 variants={fadeIn} className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tighter leading-[1.08] mb-6 md:mb-8">
@@ -132,7 +134,7 @@ export default function Home() {
               <button
                 className="bg-white text-black px-8 py-4 font-semibold hover:bg-neutral-200 transition-all w-full sm:w-auto flex items-center justify-center space-x-2 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]"
                 onClick={() => {
-                  if (connected) {
+                  if (isConnected) {
                     router.push('/dashboard');
                   } else {
                     alert('Please connect your wallet to access the dashboard.');
@@ -236,7 +238,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <motion.div variants={fadeIn} className="p-12 border border-white/10 bg-gradient-to-br from-white/5 to-transparent hover:border-white/30 transition-colors">
-              <h3 className="text-2xl font-bold mb-4">Aleo Network</h3>
+              <h3 className="text-2xl font-bold mb-4">Bot Chain</h3>
               <p className="text-neutral-400 leading-relaxed font-light mb-8">
                 The ultimate layer-1 blockchain for zero-knowledge applications. Aura utilizes Aleo&apos;s zkVM to execute marketplace logic without ever exposing the underlying data to the public.
               </p>
