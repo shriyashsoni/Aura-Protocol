@@ -54,7 +54,7 @@ export const AleoWalletProvider = ({
       setAleoWallets([
         new LeoWalletAdapter({ appName: "Aura AI" }),
         new PuzzleWalletAdapter({ appName: "Aura AI" }) as unknown as Adapter,
-        new ShieldWalletAdapter({ appName: "Aura AI" }) as unknown as Adapter,
+        new ShieldWalletAdapter() as unknown as Adapter,
       ]);
     };
     void loadAleoAdapters();
