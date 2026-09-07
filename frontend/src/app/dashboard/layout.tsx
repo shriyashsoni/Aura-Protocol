@@ -1,12 +1,16 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Brain, Database, Terminal, Wallet, Fingerprint, LayoutDashboard } from "lucide-react";
-import { WalletMultiButton } from "@demox-labs/aleo-wallet-adapter-reactui";
-import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
 import "@demox-labs/aleo-wallet-adapter-reactui/styles.css";
 import { AleoWalletProvider } from "../components/AleoWalletProvider";
+
+const WalletMultiButton = dynamic(
+  () => import("@demox-labs/aleo-wallet-adapter-reactui").then((module) => module.WalletMultiButton),
+  { ssr: false },
+);
 
 const NAV_LINKS = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard, exact: true },
@@ -18,7 +22,6 @@ const NAV_LINKS = [
 
 function DashboardContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { publicKey } = useWallet();
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
@@ -63,17 +66,6 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
           <WalletMultiButton />
         </div>
       </header>
-
-      {/* Wallet address bar */}
-      {publicKey && (
-        <div className="border-b border-white/5 bg-white/[0.02] px-6 py-2 flex items-center space-x-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-          <span className="text-xs font-mono text-neutral-500 tracking-wider">
-            {publicKey}
-          </span>
-          <span className="text-xs font-mono text-green-400/70">● ALEO TESTNET</span>
-        </div>
-      )}
 
       {/* Mobile nav */}
       <nav className="md:hidden flex border-b border-white/10 overflow-x-auto bg-black/90 backdrop-blur-md sticky top-[61px] z-40">

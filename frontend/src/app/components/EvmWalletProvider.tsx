@@ -31,21 +31,44 @@ export function EvmWalletProvider({ children }: { children: React.ReactNode }) {
       window.open("https://metamask.io/download/", "_blank", "noopener,noreferrer");
       return;
     }
-    const accounts = (await window.ethereum.request({ method: "eth_requestAccounts" })) as string[];
-    const currentChain = (await window.ethereum.request({ method: "eth_chainId" })) as string;
-    setAddress(accounts[0] ?? null);
-    setChainId(Number.parseInt(currentChain, 16));
+    try {
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      const currentChain = await window.ethereum.request({ method: "eth_chainId" });
+      const account = Array.isArray(accounts) && typeof accounts[0] === "string" ? accounts[0] : null;
+      const parsedChainId = typeof currentChain === "string" ? Number.parseInt(currentChain, 16) : NaN;
+      setAddress(account);
+      setChainId(Number.isFinite(parsedChainId) ? parsedChainId : null);
+    } catch (error) {
+      console.warn("Wallet connection was cancelled or unavailable.", error);
+      setAddress(null);
+      setChainId(null);
+    }
   }, []);
 
   useEffect(() => {
     if (!window.ethereum) return;
-    const handleAccounts = (...args: unknown[]) => setAddress((args[0] as string[])[0] ?? null);
-    const handleChain = (...args: unknown[]) => setChainId(Number.parseInt(args[0] as string, 16));
-    window.ethereum.on?.("accountsChanged", handleAccounts);
-    window.ethereum.on?.("chainChanged", handleChain);
+    const handleAccounts = (...args: unknown[]) => {
+      const accounts = args[0];
+      setAddress(Array.isArray(accounts) && typeof accounts[0] === "string" ? accounts[0] : null);
+    };
+    const handleChain = (...args: unknown[]) => {
+      const value = args[0];
+      const parsedChainId = typeof value === "string" ? Number.parseInt(value, 16) : NaN;
+      setChainId(Number.isFinite(parsedChainId) ? parsedChainId : null);
+    };
+    try {
+      window.ethereum.on?.("accountsChanged", handleAccounts);
+      window.ethereum.on?.("chainChanged", handleChain);
+    } catch (error) {
+      console.warn("Wallet event listeners are unavailable.", error);
+    }
     return () => {
-      window.ethereum?.removeListener?.("accountsChanged", handleAccounts);
-      window.ethereum?.removeListener?.("chainChanged", handleChain);
+      try {
+        window.ethereum?.removeListener?.("accountsChanged", handleAccounts);
+        window.ethereum?.removeListener?.("chainChanged", handleChain);
+      } catch (error) {
+        console.warn("Wallet event listeners could not be removed.", error);
+      }
     };
   }, []);
 
