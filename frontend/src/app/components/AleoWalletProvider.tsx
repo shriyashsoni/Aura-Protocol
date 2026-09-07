@@ -57,7 +57,10 @@ export const AleoWalletProvider = ({
         new ShieldWalletAdapter() as unknown as Adapter,
       ]);
     };
-    void loadAleoAdapters();
+    void loadAleoAdapters().catch((error: unknown) => {
+      console.warn("Aleo wallet adapters are unavailable in this browser.", error);
+      setAleoWallets([]);
+    });
   }, []);
 
   useEffect(() => {
