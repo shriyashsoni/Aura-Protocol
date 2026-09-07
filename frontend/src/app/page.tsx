@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { useEvmWallet } from "./components/AleoWalletProvider";
+import { useEvmWallet } from "./components/EvmWalletProvider";
 
 const Hero3D = dynamic(() => import("./components/Hero3D"), { ssr: false });
 

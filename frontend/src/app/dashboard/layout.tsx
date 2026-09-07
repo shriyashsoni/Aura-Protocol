@@ -6,6 +6,7 @@ import { Brain, Database, Terminal, Wallet, Fingerprint, LayoutDashboard } from 
 import { WalletMultiButton } from "@demox-labs/aleo-wallet-adapter-reactui";
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
 import "@demox-labs/aleo-wallet-adapter-reactui/styles.css";
+import { AleoWalletProvider } from "../components/AleoWalletProvider";
 
 const NAV_LINKS = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard, exact: true },
@@ -15,7 +16,7 @@ const NAV_LINKS = [
   { href: "/dashboard/vault", label: "Vault", icon: Wallet },
 ];
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+function DashboardContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { publicKey } = useWallet();
 
@@ -107,4 +108,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </footer>
     </div>
   );
+}
+
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  return <AleoWalletProvider><DashboardContent>{children}</DashboardContent></AleoWalletProvider>;
 }
